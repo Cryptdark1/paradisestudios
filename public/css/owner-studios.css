@@ -1,0 +1,569 @@
+/* ==========================================================================
+   PARADISE STUDIOS — MY STUDIOS
+   Studio cards, the add/edit form and the equipment manager.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. REQUIRED FIELD MARKER
+   -------------------------------------------------------------------------- */
+
+.ps-req {
+    color: var(--ps-danger);
+    font-weight: 700;
+}
+
+.ps-field.has-error .ps-field__label {
+    color: var(--ps-danger);
+}
+
+/* --------------------------------------------------------------------------
+   2. STUDIO GRID
+   -------------------------------------------------------------------------- */
+
+.ps-studio-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 16px;
+    align-items: start;
+}
+
+.ps-studio-card {
+    display: flex;
+    flex-direction: column;
+    background: var(--ps-surface);
+    border: 1px solid var(--ps-border);
+    border-radius: 16px;
+    box-shadow: var(--ps-shadow-sm);
+    overflow: hidden;
+    /* Lets the footer adapt to the card's own width rather than the viewport,
+       which matters because the grid can be 3 columns on a wide screen. */
+    container-type: inline-size;
+    transition:
+        border-color 0.18s ease,
+        box-shadow 0.18s ease,
+        transform 0.18s ease;
+}
+
+.ps-studio-card:hover {
+    border-color: var(--ps-border-strong);
+    box-shadow: var(--ps-shadow-md);
+    transform: translateY(-2px);
+}
+
+/* --- Card header (stands in for a photo: no image column exists yet) --- */
+
+.ps-studio-card__head {
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    gap: 11px;
+    min-height: 78px;
+    padding: 14px 15px;
+    background:
+        radial-gradient(120% 140% at 100% 0%, var(--ps-primary-soft) 0%, transparent 62%),
+        linear-gradient(135deg, var(--ps-indigo) 0%, var(--ps-indigo-deep) 100%);
+    color: #fff;
+}
+
+.ps-studio-card__monogram {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 46px;
+    height: 46px;
+    border-radius: 13px;
+    background: rgba(255, 255, 255, 0.14);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    font-family: var(--ps-font-display);
+    font-size: 1.0625rem;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    backdrop-filter: blur(2px);
+}
+
+.ps-studio-card__headtext {
+    flex: 1;
+    min-width: 0;
+}
+
+.ps-studio-card__name {
+    display: block;
+    font-family: var(--ps-font-display);
+    font-size: 1rem;
+    font-weight: 600;
+    line-height: 1.3;
+    color: #fff;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+
+.ps-studio-card__where {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-top: 4px;
+    font-size: 0.75rem;
+    color: rgba(255, 255, 255, 0.78);
+}
+
+.ps-studio-card__where .ps-icon {
+    flex: none;
+    opacity: 0.85;
+}
+
+.ps-studio-card__where span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.ps-studio-card__body {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    flex: 1;
+    padding: 15px;
+}
+
+.ps-studio-card__desc {
+    font-size: 0.8125rem;
+    line-height: 1.55;
+    color: var(--ps-text-muted);
+}
+
+.ps-studio-card__desc--empty {
+    font-style: italic;
+    color: var(--ps-text-soft);
+}
+
+/* --- Equipment chips --- */
+
+.ps-studio-card__gear {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+}
+
+.ps-studio-card__gear-head {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--ps-text-soft);
+}
+
+.ps-studio-card__gear-head .ps-icon {
+    color: var(--ps-text-soft);
+}
+
+.ps-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+.ps-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 3px 8px;
+    border: 1px solid var(--ps-border);
+    border-radius: 99px;
+    background: var(--ps-surface-2);
+    font-size: 0.6875rem;
+    font-weight: 500;
+    color: var(--ps-text-muted);
+    max-width: 100%;
+}
+
+.ps-chip span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.ps-chip--more {
+    background: var(--ps-primary-soft);
+    border-color: transparent;
+    color: var(--ps-amber-text);
+    font-weight: 700;
+}
+
+.ps-chip--none {
+    border-style: dashed;
+    color: var(--ps-text-soft);
+    font-style: italic;
+}
+
+/* --- Card footer --- */
+
+.ps-studio-card__foot {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    flex-wrap: wrap;
+    padding: 12px 15px;
+    border-top: 1px solid var(--ps-border-subtle);
+    background: var(--ps-surface-2);
+}
+
+.ps-studio-card__price {
+    flex: 1 1 auto;
+    min-width: 0;
+    display: flex;
+    align-items: baseline;
+    flex-wrap: wrap;
+    gap: 2px 4px;
+    font-family: var(--ps-font-display);
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--ps-text-strong);
+    font-variant-numeric: tabular-nums;
+}
+
+.ps-studio-card__price span {
+    font-family: var(--ps-font-body);
+    font-size: 0.6875rem;
+    font-weight: 500;
+    color: var(--ps-text-soft);
+}
+
+.ps-studio-card__actions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex: none;
+}
+
+/*
+ * Narrow cards: the price takes its own line and the actions stretch to fill,
+ * so no button or label is ever clipped.
+ */
+@container (max-width: 320px) {
+    .ps-studio-card__price {
+        flex: 1 1 100%;
+    }
+
+    .ps-studio-card__actions {
+        width: 100%;
+    }
+
+    .ps-studio-card__actions .ps-btn {
+        flex: 1 1 0;
+        min-width: 0;
+    }
+}
+
+.ps-cardmenu {
+    position: relative;
+}
+
+.ps-cardmenu__menu {
+    min-width: 168px;
+}
+
+.ps-cardmenu__item {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    width: 100%;
+    padding: 8px 11px;
+    border: 0;
+    border-radius: 8px;
+    background: none;
+    color: var(--ps-text);
+    font-size: 0.8125rem;
+    font-weight: 500;
+    text-align: left;
+    cursor: pointer;
+}
+
+.ps-cardmenu__item:hover {
+    background: var(--ps-surface-3);
+}
+
+.ps-cardmenu__item .ps-icon {
+    flex: none;
+    color: var(--ps-text-soft);
+}
+
+/* --------------------------------------------------------------------------
+   3. EQUIPMENT MANAGER
+   -------------------------------------------------------------------------- */
+
+.ps-equipment {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.ps-equipment__search {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.ps-equipment__search .ps-search {
+    flex: 1 1 200px;
+    max-width: none;
+}
+
+.ps-equipment__search .ps-badge {
+    flex: none;
+}
+
+.ps-equipment__list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    max-height: min(48vh, 420px);
+    overflow-y: auto;
+    padding-right: 4px;
+}
+
+.ps-equipgroup__title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 8px;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ps-text-soft);
+}
+
+.ps-equipgroup__count {
+    padding: 1px 7px;
+    border-radius: 99px;
+    background: var(--ps-surface-3);
+    font-size: 0.625rem;
+    letter-spacing: 0;
+    color: var(--ps-text-muted);
+}
+
+.ps-equipgrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+    gap: 8px;
+}
+
+.ps-equipitem {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 11px;
+    border: 1px solid var(--ps-border);
+    border-radius: 11px;
+    background: var(--ps-surface);
+    cursor: pointer;
+    transition:
+        border-color 0.15s ease,
+        background-color 0.15s ease;
+}
+
+.ps-equipitem:hover {
+    border-color: var(--ps-border-strong);
+    background: var(--ps-surface-2);
+}
+
+.ps-equipitem input {
+    position: absolute;
+    opacity: 0;
+    width: 1px;
+    height: 1px;
+}
+
+.ps-equipitem__box {
+    position: relative;
+    flex: none;
+    display: grid;
+    place-items: center;
+    width: 20px;
+    height: 20px;
+    border: 1.8px solid var(--ps-border-strong);
+    border-radius: 6px;
+    background: var(--ps-surface);
+    color: transparent;
+    transition:
+        background-color 0.15s ease,
+        border-color 0.15s ease,
+        color 0.15s ease;
+}
+
+.ps-equipitem__box .ps-icon {
+    opacity: 0;
+    transform: scale(0.6);
+    transition:
+        opacity 0.15s ease,
+        transform 0.15s ease;
+}
+
+.ps-equipitem input:checked + .ps-equipitem__box {
+    background: var(--ps-success);
+    border-color: var(--ps-success);
+    color: #fff;
+}
+
+.ps-equipitem input:checked + .ps-equipitem__box .ps-icon {
+    opacity: 1;
+    transform: scale(1);
+}
+
+[data-theme="dark"] .ps-equipitem input:checked + .ps-equipitem__box {
+    color: #10161f;
+}
+
+.ps-equipitem input:focus-visible + .ps-equipitem__box {
+    outline: 2px solid var(--ps-focus-ring);
+    outline-offset: 2px;
+}
+
+.ps-equipitem:has(input:checked) {
+    border-color: var(--ps-success-border);
+    background: var(--ps-success-bg);
+}
+
+.ps-equipitem__text {
+    min-width: 0;
+}
+
+.ps-equipitem__name {
+    display: block;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--ps-text-strong);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.ps-equipitem__assigned {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    margin-top: 2px;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    color: var(--ps-success);
+}
+
+.ps-equipitem input:not(:checked) ~ .ps-equipitem__text .ps-equipitem__assigned {
+    color: var(--ps-text-soft);
+    font-weight: 500;
+}
+
+.ps-modal__foot-note {
+    flex: 1;
+    min-width: 0;
+    font-size: 0.75rem;
+    color: var(--ps-text-soft);
+}
+
+.ps-modal__form {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    max-height: calc(100dvh - 40px);
+}
+
+@media (max-width: 767px) {
+    .ps-modal__form {
+        max-height: 92dvh;
+    }
+}
+
+/* --------------------------------------------------------------------------
+   4. RESPONSIVE
+   -------------------------------------------------------------------------- */
+
+/* <= 1199px */
+@media (max-width: 1199px) {
+    .ps-studio-grid {
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    }
+}
+
+/* <= 767px — phone */
+@media (max-width: 767px) {
+    .ps-studio-grid {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 12px;
+    }
+
+    .ps-studio-card__head {
+        min-height: 70px;
+        padding: 12px 13px;
+    }
+
+    .ps-studio-card__body {
+        padding: 13px;
+        gap: 10px;
+    }
+
+    .ps-studio-card__foot {
+        padding: 11px 13px;
+    }
+
+    .ps-equipgrid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .ps-equipment__list {
+        max-height: none;
+    }
+
+    .ps-modal__foot-note {
+        flex: 1 1 100%;
+        order: -1;
+        margin-bottom: 2px;
+    }
+}
+
+/* <= 479px */
+@media (max-width: 479px) {
+    .ps-studio-card__monogram {
+        width: 40px;
+        height: 40px;
+        font-size: 0.9375rem;
+    }
+
+    .ps-studio-card__name {
+        font-size: 0.9375rem;
+    }
+
+    .ps-studio-card__foot {
+        gap: 8px;
+    }
+
+    .ps-studio-card__price {
+        font-size: 0.9375rem;
+    }
+
+    .ps-studio-card__actions .ps-btn {
+        flex: 1;
+    }
+}
+
+/* <= 359px — 320px baseline */
+@media (max-width: 359px) {
+    .ps-studio-card__price {
+        flex: 1 1 100%;
+    }
+
+    .ps-studio-card__actions {
+        width: 100%;
+    }
+
+    .ps-studio-card__actions .ps-btn {
+        min-width: 0;
+    }
+}

@@ -1,0 +1,233 @@
+/* ==========================================================================
+   PARADISE STUDIOS — ARTIST PALETTE
+   --------------------------------------------------------------------------
+   The Artist Frontend has its own colour system in the approved prototype:
+
+       Amber   warm gold accent
+       Copper  mid warm brown
+       Waamun  warm tan / clay
+       Ivory   warm off-white
+       Charcoal warm near-black
+
+   The Owner Frontend deliberately uses a cooler indigo sidebar, so this file
+   remaps the shared brand tokens to the warm palette *inside the artist
+   scope only*. Everything that references --ps-indigo (sidebar, hero, media
+   placeholders, artist avatars, auth panel) therefore becomes warm without any
+   component needing new rules, and the Owner Frontend is untouched.
+
+   Loaded by:
+     templates/artist-shell-start.php
+     login.php / register.php
+
+   The scope class is `.ps-artist` on <body>.
+   ========================================================================== */
+
+.ps-artist {
+    /* --- Brand hues --------------------------------------------------- */
+    --ps-amber: #e09b34;
+    --ps-amber-soft: #eab866;
+    --ps-amber-text: #8a5a10;
+
+    /* Indigo slot reused as "Copper" for the artist identity */
+    --ps-indigo: #8a5a31;
+    --ps-indigo-deep: #3b2415;
+    --ps-indigo-soft: #a97142;
+
+    /* --- Surfaces ----------------------------------------------------- */
+    --ps-bg: #f7f3ec;
+    --ps-bg-alt: #f1ebe1;
+    --ps-surface: #fffdfa;
+    --ps-surface-2: #faf6ef;
+    --ps-surface-3: #f2ece2;
+    --ps-surface-inset: #f6f1e8;
+    --ps-overlay: rgba(38, 26, 18, 0.48);
+
+    /* --- Text --------------------------------------------------------- */
+    --ps-text: #241c14;
+    --ps-text-strong: #17110c;
+    --ps-text-muted: #6b5c4c;
+    --ps-text-soft: #7a6a58;
+    --ps-text-inverse: #fffaf3;
+
+    /* --- Borders ------------------------------------------------------ */
+    --ps-border: #e8ded0;
+    --ps-border-strong: #d9cbb8;
+    --ps-border-subtle: #f0e8dc;
+
+    /* --- Sidebar ------------------------------------------------------
+       The artist sidebar is a LIGHT warm ivory panel with dark text and an
+       amber active state (see the prototype's "Library" and "Buzz XP"
+       screens). The charcoal sidebar belongs to the dark variant only.
+       ------------------------------------------------------------------ */
+    --ps-sidebar-bg: #f1e7d8;
+    --ps-sidebar-bg-soft: #e9dcc8;
+    --ps-sidebar-text: #6d5744;
+    --ps-sidebar-text-strong: #2c2015;
+    --ps-sidebar-hover: rgba(109, 87, 68, 0.08);
+    --ps-sidebar-active: rgba(224, 155, 52, 0.18);
+    --ps-sidebar-border: rgba(109, 87, 68, 0.14);
+    --ps-sidebar-active-accent: #d98f22;
+    --ps-shadow-sidebar: 2px 0 18px rgba(88, 66, 45, 0.07);
+
+    /* --- Interactive --------------------------------------------------- */
+    --ps-primary: var(--ps-amber);
+    --ps-primary-hover: #cf8b26;
+    --ps-primary-contrast: #2a1a06;
+    --ps-primary-soft: rgba(224, 155, 52, 0.14);
+    --ps-primary-soft-hover: rgba(224, 155, 52, 0.22);
+    --ps-focus-ring: rgba(224, 155, 52, 0.5);
+
+    /* --- Status (warmed slightly to sit in the same family) ------------- */
+    --ps-success: #14724a;
+    --ps-success-bg: #e4f3ea;
+    --ps-success-border: #b9e0ca;
+    --ps-danger: #b83227;
+    --ps-danger-bg: #fbeae7;
+    --ps-danger-border: #f5c9c3;
+    --ps-warning: #8f5806;
+    --ps-warning-bg: #fbeedb;
+    --ps-warning-border: #f0d9ab;
+    --ps-info: #24567e;
+    --ps-info-bg: #e7eef6;
+    --ps-info-border: #c6d6e8;
+    --ps-violet: #6b3f97;
+    --ps-violet-bg: #f0e9f8;
+    --ps-violet-border: #dacbee;
+    --ps-teal: #0a6367;
+    --ps-teal-bg: #e0f0f1;
+    --ps-teal-border: #b6dcdf;
+
+    /* --- Shadows ------------------------------------------------------- */
+    --ps-shadow-xs: 0 1px 2px rgba(59, 36, 21, 0.06);
+    --ps-shadow-sm: 0 1px 2px rgba(59, 36, 21, 0.07), 0 2px 6px rgba(59, 36, 21, 0.05);
+    --ps-shadow-md: 0 4px 14px rgba(59, 36, 21, 0.09);
+    --ps-shadow-lg: 0 12px 32px rgba(59, 36, 21, 0.13);
+    --ps-shadow-xl: 0 24px 60px rgba(59, 36, 21, 0.2);
+
+    /* --- Charts --------------------------------------------------------- */
+    --ps-chart-grid: rgba(36, 28, 20, 0.08);
+    --ps-chart-tick: #6b5c4c;
+    --ps-chart-bar-track: #efe7da;
+
+    /* --- Calendar -------------------------------------------------------- */
+    --ps-cal-today-bg: rgba(224, 155, 52, 0.16);
+    --ps-cal-day-bg: #fffdfa;
+    --ps-cal-day-other: #faf6ef;
+}
+
+/* --------------------------------------------------------------------------
+   BODY LINKS
+   --------------------------------------------------------------------------
+   theme.css colours every anchor with --ps-primary. In this palette
+   --ps-primary is the amber *fill* used behind button labels, and amber text
+   on the ivory surface measures 2.32:1 - well under the 4.5:1 WCAG AA asks of
+   normal text. Link text therefore uses --ps-amber-text, the accessible amber
+   the chip component already relies on.
+
+   :where() on the scope keeps this at (0,0,1) - the same as the bare `a` rule
+   it has to beat, and which it does purely by being loaded later. Any component
+   that sets its own link colour with a class (sidebar items, nav links, table
+   rows) still wins outright, so nothing else is affected.
+   -------------------------------------------------------------------------- */
+
+:where(.ps-artist) a {
+    color: var(--ps-amber-text);
+}
+
+/* --------------------------------------------------------------------------
+   DARK MODE
+   --------------------------------------------------------------------------
+   Sampled directly from the dark screenshot in the prototype rather than
+   eyeballed. The dark variant is a flat, NEUTRAL charcoal - every measured
+   surface came back with R = G = B - with Amber and Copper used only as
+   accents on top. Two details that are easy to get backwards:
+
+     * the page is the DARKEST tone and the sidebar and cards share one
+       lighter tone above it (#212121), rather than the sidebar being darker
+       than the page;
+     * table headers are the same tone as the cards, not darker.
+
+   Copper still exists here, but only where something is meant to stand out:
+   the amber buttons, the copper media gradients and avatars, the buzz ring.
+   -------------------------------------------------------------------------- */
+
+[data-theme="dark"] .ps-artist {
+    --ps-amber: #e8a94a;
+    --ps-amber-soft: #f0bd6b;
+    --ps-amber-text: #e8a94a;
+
+    /* The Copper accent - never a surface colour. */
+    --ps-indigo: #a97142;
+    --ps-indigo-deep: #22160e;
+    --ps-indigo-soft: #c68a53;
+
+    /* --- Charcoal surfaces (page darkest, sidebar = cards above it) --- */
+    --ps-bg: #141414;
+    --ps-bg-alt: #0f0f0f;
+    --ps-surface: #212121;
+    --ps-surface-2: #1f1f1f;
+    --ps-surface-3: #2b2b2b;
+    --ps-surface-inset: #1b1b1b;
+    --ps-overlay: rgba(8, 8, 8, 0.76);
+
+    /* --- Text --------------------------------------------------------- */
+    --ps-text: #e8e8e8;
+    --ps-text-strong: #f7f7f7;
+    --ps-text-muted: #a8a8a8;
+    --ps-text-soft: #8e8e8e;
+    --ps-text-inverse: #141414;
+
+    /* --- Borders ------------------------------------------------------ */
+    --ps-border: #2e2e2e;
+    --ps-border-strong: #3d3d3d;
+    --ps-border-subtle: #242424;
+
+    /* --- Sidebar: same tone as the cards, sitting above the page ------ */
+    --ps-sidebar-bg: #212121;
+    --ps-sidebar-bg-soft: #292929;
+    --ps-sidebar-text: #9c9c9c;
+    --ps-sidebar-text-strong: #f2f2f2;
+    --ps-sidebar-hover: rgba(255, 255, 255, 0.05);
+    --ps-sidebar-active: rgba(232, 169, 74, 0.16);
+    --ps-sidebar-border: rgba(255, 255, 255, 0.07);
+    --ps-shadow-sidebar: 2px 0 18px rgba(0, 0, 0, 0.6);
+
+    /* --- Shadows ------------------------------------------------------ */
+    --ps-shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.4);
+    --ps-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4), 0 2px 6px rgba(0, 0, 0, 0.3);
+    --ps-shadow-md: 0 4px 14px rgba(0, 0, 0, 0.45);
+    --ps-shadow-lg: 0 12px 32px rgba(0, 0, 0, 0.5);
+    --ps-shadow-xl: 0 24px 60px rgba(0, 0, 0, 0.62);
+
+    --ps-primary-hover: #f0bd6b;
+    --ps-primary-contrast: #2a1a06;
+    --ps-primary-soft: rgba(232, 169, 74, 0.16);
+    --ps-primary-soft-hover: rgba(232, 169, 74, 0.26);
+
+    --ps-success: #58cf98;
+    --ps-success-bg: rgba(88, 207, 152, 0.14);
+    --ps-success-border: rgba(88, 207, 152, 0.32);
+    --ps-danger: #ff8d82;
+    --ps-danger-bg: rgba(255, 141, 130, 0.14);
+    --ps-danger-border: rgba(255, 141, 130, 0.32);
+    --ps-warning: #f0c069;
+    --ps-warning-bg: rgba(240, 192, 105, 0.14);
+    --ps-warning-border: rgba(240, 192, 105, 0.32);
+    --ps-info: #8bb8ea;
+    --ps-info-bg: rgba(139, 184, 234, 0.14);
+    --ps-info-border: rgba(139, 184, 234, 0.32);
+    --ps-violet: #bd9bee;
+    --ps-violet-bg: rgba(189, 155, 238, 0.15);
+    --ps-violet-border: rgba(189, 155, 238, 0.34);
+    --ps-teal: #66c9cf;
+    --ps-teal-bg: rgba(102, 201, 207, 0.14);
+    --ps-teal-border: rgba(102, 201, 207, 0.32);
+
+    --ps-chart-grid: rgba(232, 232, 232, 0.08);
+    --ps-chart-tick: #8e8e8e;
+    --ps-chart-bar-track: rgba(255, 255, 255, 0.07);
+
+    --ps-cal-today-bg: rgba(232, 169, 74, 0.18);
+    --ps-cal-day-bg: #212121;
+    --ps-cal-day-other: #1b1b1b;
+}

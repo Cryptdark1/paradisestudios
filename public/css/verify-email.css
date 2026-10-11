@@ -1,0 +1,257 @@
+/* =============================================================================
+   Paradise Studios - email verification
+   =============================================================================
+   Scope: the OTP entry screen only. Every colour is the project's own token
+   from theme.css, so this screen matches login.php and register.php in both
+   themes without restating a single hex value.
+
+   Deliberately NOT defined here: buttons, inputs, alerts, badges, typography.
+   Those come from app.css / auth.css and are not duplicated.
+   ========================================================================== */
+
+/* ---------------------------------------------------------------------------
+   The six code boxes
+   --------------------------------------------------------------------------- */
+
+.ps-otp {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin: 0 0 26px;
+}
+
+.ps-otp__box {
+    width: 52px;
+    height: 62px;
+    display: grid;
+    place-items: center;
+    border: 1px solid var(--ps-border-strong);
+    border-radius: 14px;
+    background: var(--ps-surface-2);
+    font-family: var(--ps-font-display);
+    font-size: 26px;
+    font-weight: 600;
+    color: var(--ps-text-strong);
+    box-shadow: inset 0 1px 0 rgba(127, 140, 170, .08);
+    transition:
+        border-color .18s ease,
+        box-shadow .18s ease,
+        background .18s ease;
+}
+
+/* The box currently taking input. Uses the focus ring token so it matches
+   every other focused control in the product. */
+.ps-otp__box.is-active {
+    border-color: var(--ps-primary);
+    box-shadow: 0 0 0 3px var(--ps-primary-soft);
+}
+
+.ps-otp__box.is-active::after {
+    content: "";
+    width: 2px;
+    height: 26px;
+    border-radius: 2px;
+    background: var(--ps-primary);
+    animation: ps-otp-caret 1.1s steps(2, start) infinite;
+}
+
+@keyframes ps-otp-caret {
+    0%, 100% { opacity: 1; }
+    50%      { opacity: 0; }
+}
+
+/* Rejected. Every box flags at once, because a code is rejected as a whole. */
+.ps-otp.is-invalid .ps-otp__box {
+    border-color: var(--ps-danger);
+    background: var(--ps-danger-bg);
+    color: var(--ps-danger);
+}
+
+.ps-otp.is-invalid .ps-otp__box.is-active::after {
+    background: var(--ps-danger);
+}
+
+.ps-otp.is-shaking {
+    animation: ps-otp-shake .38s ease;
+}
+
+@keyframes ps-otp-shake {
+    0%, 100% { transform: translateX(0); }
+    20%      { transform: translateX(-6px); }
+    40%      { transform: translateX(6px); }
+    60%      { transform: translateX(-4px); }
+    80%      { transform: translateX(4px); }
+}
+
+/* Once accepted, the boxes settle rather than turning green one by one. */
+.ps-otp.is-accepted .ps-otp__box {
+    border-color: var(--ps-success);
+    background: var(--ps-success-bg);
+    color: var(--ps-success);
+}
+
+/* ---------------------------------------------------------------------------
+   Success medallion
+   ---------------------------------------------------------------------------
+   The four/six boxes collapse into one ring, which is the moment the design is
+   built around. The ring is drawn with borders so it stays crisp at any size.
+   --------------------------------------------------------------------------- */
+
+.ps-verify-medallion {
+    position: relative;
+    width: 118px;
+    height: 118px;
+    margin: 4px auto 26px;
+    display: grid;
+    place-items: center;
+}
+
+.ps-verify-medallion::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    border: 1px solid var(--ps-success-border);
+    background: var(--ps-success-bg);
+    box-shadow: 0 0 42px var(--ps-success-bg);
+}
+
+.ps-verify-medallion__ring {
+    position: absolute;
+    inset: -6px;
+    border-radius: 50%;
+    border: 1px solid var(--ps-success-border);
+    opacity: 0;
+    animation: ps-verify-ripple 2.4s ease-out infinite;
+}
+
+.ps-verify-medallion__ring:nth-child(2) { animation-delay: .8s; }
+.ps-verify-medallion__ring:nth-child(3) { animation-delay: 1.6s; }
+
+@keyframes ps-verify-ripple {
+    0%   { opacity: .55; transform: scale(.94); }
+    70%  { opacity: 0;   transform: scale(1.12); }
+    100% { opacity: 0;   transform: scale(1.12); }
+}
+
+/*
+ * The checkmark is ALWAYS drawn.
+ *
+ * An earlier version animated stroke-dashoffset 40 -> 0 to make it "draw
+ * itself". That was wrong: whenever the animation does not advance - a throttled
+ * tab, an engine that ignores it, a screenshot tool - the dash offset stays at
+ * 40 and the tick renders INVISIBLE. Verified in a real browser, where it sat at
+ * 40px indefinitely.
+ *
+ * A missing tick is the one thing on this screen that cannot be allowed to fail,
+ * so it carries no animation at all. The ripple rings below provide the motion;
+ * they are decoration and harmless when they do not animate.
+ */
+.ps-verify-medallion__tick {
+    position: relative;
+    width: 50px;
+    height: 50px;
+    color: var(--ps-success);
+}
+
+/* ---------------------------------------------------------------------------
+   Address chip + resend row
+   --------------------------------------------------------------------------- */
+
+.ps-verify-chip {
+    display: inline-block;
+    max-width: 100%;
+    margin: 0 0 28px;
+    padding: 7px 16px;
+    border: 1px solid var(--ps-violet-border);
+    border-radius: 999px;
+    background: var(--ps-violet-bg);
+    color: var(--ps-violet);
+    font-size: 13.5px;
+    font-weight: 600;
+    /* A long address must not push the boxes out of the panel. */
+    overflow-wrap: anywhere;
+}
+
+.ps-verify-foot {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 10px 22px;
+    margin-top: 24px;
+    font-size: 13.5px;
+    color: var(--ps-text-soft);
+}
+
+.ps-verify-foot__item {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+}
+
+.ps-verify-foot__item svg {
+    width: 15px;
+    height: 15px;
+    flex: none;
+}
+
+.ps-verify-foot__count {
+    color: var(--ps-text);
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+}
+
+/* Disabled during the cooldown: visibly inert, not merely unresponsive. */
+.ps-verify-foot__item.is-waiting {
+    opacity: .55;
+}
+
+.ps-verify-link {
+    color: var(--ps-text-soft);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+}
+
+.ps-verify-link:hover {
+    color: var(--ps-text);
+}
+
+/* ---------------------------------------------------------------------------
+   Busy state on the submit button
+   --------------------------------------------------------------------------- */
+
+.ps-btn.is-busy {
+    pointer-events: none;
+    opacity: .72;
+}
+
+/* ---------------------------------------------------------------------------
+   Small screens
+   --------------------------------------------------------------------------- */
+
+@media (max-width: 420px) {
+    .ps-otp { gap: 6px; }
+    .ps-otp__box {
+        width: 44px;
+        height: 54px;
+        font-size: 22px;
+        border-radius: 12px;
+    }
+    .ps-verify-foot { flex-direction: column; gap: 12px; }
+}
+
+/* ---------------------------------------------------------------------------
+   Reduced motion
+   ---------------------------------------------------------------------------
+   The animation is decoration. Anyone who has asked the OS to stop motion gets
+   the same information without it.
+   --------------------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+    .ps-otp__box.is-active::after,
+    .ps-verify-medallion__ring,
+    .ps-otp.is-shaking {
+        animation: none;
+    }
+}

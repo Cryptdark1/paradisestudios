@@ -1,0 +1,147 @@
+# =============================================================================
+# Paradise Studios - Apache access rules for the project directory
+# =============================================================================
+# Defence in depth only. Secrets are kept OUTSIDE the web root (see
+# config/env.php and config/.env.example), so nothing here should ever be the
+# thing standing between a secret and a visitor. These rules exist so that a
+# future mistake - someone dropping a .env in here, or a stray editor backup -
+# is not immediately exposed.
+#
+# Requires AllowOverride All and mod_authz_core. XAMPP ships with both.
+# =============================================================================
+
+# Deny any dotfile: .env, .git, .gitignore, .htaccess, editor swap files.
+<FilesMatch "^\.">
+    Require all denied
+</FilesMatch>
+
+# Deny env files by NAME, not just by leading dot.
+#
+# config/env.php resolves to "paradisestudios.env" by default - a file that does
+# NOT begin with a dot, so the rule above does not match it. Anyone who guessed
+# that one filename would be served the real BREVO_API_KEY and Paystack keys.
+# The name is a constant in this project, so the deny is explicit rather than a
+# catch-all that could block a legitimate asset.
+<FilesMatch "(?i)^(paradisestudios\.env|\.env.*|.*\.env)$">
+    Require all denied
+</FilesMatch>
+
+# Deny SQL dumps. Schema and migration files are source, not content, and there
+# is no reason to serve them over HTTP.
+<FilesMatch "\.(sql|sqlite|db)$">
+    Require all denied
+</FilesMatch>
+
+# Deny PHP session files and anything that looks like a private key or
+# certificate dropped into the tree by mistake.
+<FilesMatch "\.(pem|key|p12|pfx|crt)$">
+    Require all denied
+</FilesMatch>
+
+# Deny editor backups and OS litter.
+#
+# Apache serves these as PLAIN TEXT, so a .bak next to a PHP file hands over that
+# file's source to anyone who guesses the name. This is source disclosure, not
+# just tidiness: an api/payment-helpers.php.bak was reachable at a predictable URL.
+<FilesMatch "(?i)\.(bak|old|orig|save|swp|swo|tmp|temp|log|ini|dist|rej)$">
+    Require all denied
+</FilesMatch>
+
+# Never serve directory listings from the application root.
+Options -Indexes
+
+# Stop Apache appending its build to generated error pages.
+#
+# This is separate from the Server header below. mod_headers cannot remove the
+# "Server:" response header (that needs ServerTokens in httpd.conf), but
+# ServerSignature does control the footer printed on 404/500 pages, and that one
+# is reachable from .htaccess.
+ServerSignature Off
+
+# -----------------------------------------------------------------------------
+# Never show PHP errors to a visitor.
+#
+# THIS IS THE MOST IMPORTANT RULE IN THIS FILE.
+#
+# With display_errors on, any uncaught error returns the absolute server path
+# (C:\xampp\htdocs\...) to whoever triggered it. That is a direct map of the
+# filesystem for an attacker, and it turns a small bug into a large disclosure.
+# Errors must still be LOGGED; that is what log_errors is for.
+#
+# php_flag is refused inside <IfModule> when the host runs CGI/FastCGI rather
+# than mod_php, and that refusal is itself a 500 on every request, so the
+# module guard is mandatory rather than decorative.
+<IfModule mod_php.c>
+    php_flag display_errors off
+    php_flag display_startup_errors off
+    php_flag log_errors on
+    php_flag expose_php off
+</IfModule>
+
+<IfModule mod_php7.c>
+    php_flag display_errors off
+    php_flag display_startup_errors off
+    php_flag log_errors on
+    php_flag expose_php off
+</IfModule>
+
+<IfModule mod_php8.c>
+    php_flag display_errors off
+    php_flag display_startup_errors off
+    php_flag log_errors on
+    php_flag expose_php off
+</IfModule>
+
+# -----------------------------------------------------------------------------
+# Response headers.
+#
+# Every one of these is wrapped in <IfModule> because a host without mod_headers
+# would otherwise 500 the entire site on a missing directive.
+<IfModule mod_headers.c>
+    # Do not advertise the PHP version.
+    Header unset X-Powered-By
+
+    # Stop the server announcing its exact Apache/OpenSSL/PHP build. Version
+    # banners are free reconnaissance for an attacker matching CVEs.
+    Header always unset Server
+    Header always unset X-Powered-By
+
+    # Clickjacking: forbid this site being framed by another origin.
+    Header always set X-Frame-Options "SAMEORIGIN"
+
+    # Content-type sniffing: tell the browser to trust only the declared type,
+    # so an uploaded file cannot be re-interpreted as script.
+    Header always set X-Content-Type-Options "nosniff"
+
+    # Referrer leakage: a payment or verification URL must not travel to a third
+    # party. The origin only, no path.
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+
+    # Bind the page to the site's own origins, so a stray injected <script> or
+    # <img> cannot phone home or pull code from elsewhere.
+    #
+    # 'unsafe-inline' is required for style because the project ships inline
+    # styles in its PHP templates; 'unsafe-eval' is absent deliberately.
+    Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' data:; connect-src 'self'; form-action 'self'; frame-ancestors 'self'; base-uri 'self'; object-src 'none'"
+
+    # Anything that is not a page (images, css, js) must be revalidated, so a
+    # stale copy cannot be replayed after a fix.
+    <FilesMatch "\.(js|css|png|jpg|jpeg|gif|svg|ico|woff2?)$">
+        Header set Cache-Control "no-cache, must-revalidate"
+    </FilesMatch>
+</IfModule>
+
+# Deny the test tree.
+#
+# Development-only, but these are PHP files, so Apache would happily EXECUTE them
+# on request. A test file run outside its own harness fatals, and when
+# display_errors is on, that fatal returns the absolute server path in the HTTP
+# response. That is an information leak, not just untidiness.
+#
+# RedirectMatch is used rather than <Directory>, because <Directory> is not
+# permitted in .htaccess context - Apache answers 500 for the whole site when it
+# appears there, so this must stay a per-request redirect rule.
+#
+# The rule matches on the path suffix, so it still denies the directory if a test
+# file is dropped in or restored from a backup later.
+RedirectMatch 404 (?i)/tests(/|$)

@@ -1,0 +1,2531 @@
+/* ==========================================================================
+   PARADISE STUDIOS — SHARED APPLICATION LAYER
+   --------------------------------------------------------------------------
+   Shell, navigation, and every reusable UI component used by the owner
+   pages. Colour values come exclusively from theme.css tokens so light/dark
+   mode applies everywhere without per-page overrides.
+
+   Breakpoints used throughout the project:
+     <=1439px  compact desktop
+     <=1199px  laptop
+     <=1023px  tablet landscape — sidebar becomes an off-canvas drawer
+     <=767px   phone — drawer + bottom navigation
+     <=479px   large phone
+     <=359px   small phone (320px baseline)
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. SHELL
+   -------------------------------------------------------------------------- */
+
+/*
+ * The `hidden` attribute must win over component rules. For example
+ * `.ps-stateline tbody td { display: flex }` on phones is more specific than the
+ * user agent's `[hidden] { display: none }`, which would otherwise leave rows
+ * and panels visible when the JS hides them.
+ */
+[hidden] {
+    display: none !important;
+}
+
+.ps-shell {
+    --ps-sidebar-w: 252px;
+    min-height: 100vh;
+    min-height: 100dvh;
+}
+
+.ps-sidebar {
+    position: fixed;
+    inset: 0 auto 0 0;
+    z-index: 130;
+    display: flex;
+    flex-direction: column;
+    width: var(--ps-sidebar-w);
+    background: var(--ps-sidebar-bg);
+    border-right: 1px solid var(--ps-sidebar-border);
+    box-shadow: var(--ps-shadow-sidebar);
+    transition: transform 0.26s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.ps-main {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    min-height: 100dvh;
+    margin-left: var(--ps-sidebar-w);
+    min-width: 0;
+}
+
+.ps-content {
+    flex: 1;
+    width: 100%;
+    min-width: 0;
+    padding: 22px 26px 44px;
+}
+
+/* Scrim shown behind the drawer / mobile nav */
+.ps-scrim {
+    position: fixed;
+    inset: 0;
+    z-index: 120;
+    background: var(--ps-overlay);
+    border: 0;
+    padding: 0;
+    opacity: 0;
+    visibility: hidden;
+    transition:
+        opacity 0.24s ease,
+        visibility 0.24s ease;
+}
+
+.ps-scrim.is-open {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* --------------------------------------------------------------------------
+   2. SIDEBAR BRAND
+   -------------------------------------------------------------------------- */
+
+.ps-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 18px 18px 16px;
+    min-height: 66px;
+}
+
+.ps-brand__mark {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    background: linear-gradient(140deg, var(--ps-amber) 0%, #b9791b 100%);
+    color: #fff;
+    box-shadow: 0 4px 12px rgba(217, 154, 43, 0.35);
+}
+
+.ps-brand__name {
+    font-family: var(--ps-font-display);
+    font-size: 0.9375rem;
+    font-weight: 700;
+    line-height: 1.08;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ps-sidebar-text-strong);
+}
+
+.ps-brand__name span {
+    display: block;
+}
+
+.ps-brand__name span:last-child {
+    color: var(--ps-amber);
+}
+
+.ps-brand--foot {
+    padding: 14px 18px;
+    border-top: 1px solid var(--ps-sidebar-border);
+}
+
+.ps-brand--foot .ps-brand__name {
+    font-size: 0.75rem;
+    letter-spacing: 0.05em;
+}
+
+/* --------------------------------------------------------------------------
+   3. SIDEBAR NAVIGATION
+   -------------------------------------------------------------------------- */
+
+.ps-nav {
+    flex: 1;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    padding: 6px 12px 16px;
+}
+
+.ps-nav__section {
+    margin: 14px 0 6px;
+    padding: 0 10px;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--ps-sidebar-text);
+    opacity: 0.65;
+}
+
+.ps-nav__link {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    padding: 10px 12px;
+    margin-bottom: 2px;
+    border-radius: 10px;
+    font-size: 0.9375rem;
+    font-weight: 500;
+    color: var(--ps-sidebar-text);
+    text-decoration: none;
+    transition:
+        background-color 0.16s ease,
+        color 0.16s ease;
+}
+
+.ps-nav__link:hover {
+    background: var(--ps-sidebar-hover);
+    color: var(--ps-sidebar-text-strong);
+    text-decoration: none;
+}
+
+.ps-nav__link .ps-icon {
+    flex: none;
+    opacity: 0.9;
+}
+
+.ps-nav__link.is-active {
+    background: var(--ps-sidebar-active);
+    color: var(--ps-sidebar-text-strong);
+    font-weight: 600;
+}
+
+.ps-nav__link.is-active .ps-icon {
+    color: var(--ps-sidebar-active-accent);
+    opacity: 1;
+}
+
+.ps-nav__link.is-active::before {
+    content: "";
+    position: absolute;
+    left: -12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 3px;
+    height: 22px;
+    border-radius: 0 3px 3px 0;
+    background: var(--ps-sidebar-active-accent);
+}
+
+.ps-nav__label {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Count pill rendered next to nav items (real data only) */
+.ps-nav__count {
+    flex: none;
+    min-width: 20px;
+    padding: 1px 6px;
+    border-radius: 99px;
+    background: var(--ps-amber);
+    color: var(--ps-primary-contrast);
+    font-size: 0.6875rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+    text-align: center;
+}
+
+.ps-nav__link:not(.is-active) .ps-nav__count {
+    background: rgba(255, 255, 255, 0.14);
+    color: var(--ps-sidebar-text-strong);
+}
+
+/* --------------------------------------------------------------------------
+   4. TOPBAR
+   -------------------------------------------------------------------------- */
+
+.ps-topbar {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-height: 66px;
+    padding: 10px 26px;
+    background: var(--ps-surface);
+    border-bottom: 1px solid var(--ps-border);
+}
+
+.ps-topbar__title {
+    flex: 1;
+    min-width: 0;
+    font-family: var(--ps-font-display);
+    font-size: 1.125rem;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    color: var(--ps-text-strong);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.ps-topbar__actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex: none;
+}
+
+/* Drawer toggle: hidden on desktop, revealed by the <=1023px breakpoint.
+   Declared after .ps-iconbtn (and with equal specificity it would lose the
+   source order), so it is scoped to keep `display: none` authoritative. */
+.ps-iconbtn.ps-topbar__burger {
+    display: none;
+}
+
+.ps-topbar__spacer-mobile {
+    display: none;
+}
+
+/* Icon-only button used across the topbar */
+.ps-iconbtn {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 38px;
+    height: 38px;
+    padding: 0;
+    border: 1px solid var(--ps-border);
+    border-radius: 10px;
+    background: var(--ps-surface);
+    color: var(--ps-text-muted);
+    transition:
+        background-color 0.16s ease,
+        color 0.16s ease,
+        border-color 0.16s ease;
+}
+
+.ps-iconbtn:hover {
+    background: var(--ps-surface-3);
+    color: var(--ps-text-strong);
+    border-color: var(--ps-border-strong);
+}
+
+.ps-iconbtn:active {
+    transform: translateY(1px);
+}
+
+/* Theme toggle — a single control across the whole application.
+   The glyph shows the mode the user will switch TO. */
+.ps-theme-toggle {
+    position: relative;
+    width: 38px;
+    height: 38px;
+    padding: 0;
+    border: 1px solid var(--ps-border);
+    border-radius: 10px;
+    background: var(--ps-surface);
+    color: var(--ps-text-muted);
+    font-size: 17px;
+    line-height: 1;
+    transition:
+        background-color 0.16s ease,
+        color 0.16s ease,
+        border-color 0.16s ease;
+}
+
+.ps-theme-toggle:hover {
+    background: var(--ps-primary-soft);
+    color: var(--ps-amber);
+    border-color: var(--ps-border-strong);
+}
+
+/* --------------------------------------------------------------------------
+   5. USER MENU
+   -------------------------------------------------------------------------- */
+
+.ps-usermenu {
+    position: relative;
+    flex: none;
+}
+
+.ps-usermenu__trigger {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 4px 10px 4px 4px;
+    border: 1px solid var(--ps-border);
+    border-radius: 99px;
+    background: var(--ps-surface);
+    color: var(--ps-text);
+    transition:
+        background-color 0.16s ease,
+        border-color 0.16s ease;
+}
+
+.ps-usermenu__trigger:hover {
+    background: var(--ps-surface-3);
+    border-color: var(--ps-border-strong);
+}
+
+.ps-usermenu__trigger > .ps-icon {
+    color: var(--ps-text-soft);
+    transition: transform 0.2s ease;
+}
+
+.ps-usermenu.is-open .ps-usermenu__trigger > .ps-icon {
+    transform: rotate(180deg);
+}
+
+.ps-usermenu__meta {
+    display: none;
+    text-align: left;
+    line-height: 1.2;
+    max-width: 130px;
+}
+
+.ps-usermenu__meta strong {
+    display: block;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--ps-text-strong);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.ps-usermenu__meta small {
+    display: block;
+    font-size: 0.6875rem;
+    color: var(--ps-text-soft);
+    text-transform: capitalize;
+}
+
+/* Dropdown surface (shared by menus and select popovers) */
+.ps-menu {
+    position: absolute;
+    z-index: 160;
+    min-width: 232px;
+    padding: 6px;
+    border: 1px solid var(--ps-border);
+    border-radius: 14px;
+    background: var(--ps-surface);
+    box-shadow: var(--ps-shadow-lg);
+    animation: ps-menu-in 0.16s ease;
+}
+
+.ps-menu--right {
+    top: calc(100% + 8px);
+    right: 0;
+}
+
+.ps-menu--below {
+    top: calc(100% + 8px);
+    left: 0;
+}
+
+@keyframes ps-menu-in {
+    from {
+        opacity: 0;
+        transform: translateY(-6px);
+    }
+}
+
+.ps-menu__header {
+    padding: 10px 12px 11px;
+    border-bottom: 1px solid var(--ps-border-subtle);
+    margin-bottom: 6px;
+}
+
+.ps-menu__header strong {
+    display: block;
+    font-size: 0.875rem;
+    color: var(--ps-text-strong);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.ps-menu__header small {
+    display: block;
+    font-size: 0.75rem;
+    color: var(--ps-text-soft);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.ps-menu__item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    padding: 9px 12px;
+    border: 0;
+    border-radius: 9px;
+    background: none;
+    color: var(--ps-text);
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-align: left;
+    text-decoration: none;
+    transition: background-color 0.14s ease;
+}
+
+.ps-menu__item:hover {
+    background: var(--ps-surface-3);
+    text-decoration: none;
+}
+
+.ps-menu__item .ps-icon {
+    flex: none;
+    color: var(--ps-text-soft);
+}
+
+.ps-menu__item:hover .ps-icon {
+    color: var(--ps-primary);
+}
+
+.ps-menu__item--danger {
+    color: var(--ps-danger);
+}
+
+.ps-menu__item--danger .ps-icon {
+    color: var(--ps-danger);
+}
+
+.ps-menu__sep {
+    height: 1px;
+    margin: 6px 4px;
+    background: var(--ps-border-subtle);
+}
+
+.ps-menu__role {
+    display: inline-block;
+    margin-left: auto;
+    padding: 2px 8px;
+    border-radius: 99px;
+    background: var(--ps-primary-soft);
+    color: var(--ps-amber-text);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    text-transform: capitalize;
+}
+
+/* --------------------------------------------------------------------------
+   6. AVATARS
+   -------------------------------------------------------------------------- */
+
+.ps-avatar {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: linear-gradient(140deg, var(--ps-amber) 0%, #b9791b 100%);
+    color: #fff;
+    font-family: var(--ps-font-display);
+    font-size: 0.8125rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    overflow: hidden;
+    user-select: none;
+}
+
+.ps-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.ps-avatar--sm {
+    width: 30px;
+    height: 30px;
+    font-size: 0.6875rem;
+}
+
+.ps-avatar--lg {
+    width: 64px;
+    height: 64px;
+    font-size: 1.25rem;
+}
+
+.ps-avatar--xl {
+    width: 88px;
+    height: 88px;
+    font-size: 1.75rem;
+}
+
+.ps-avatar--artist {
+    background: linear-gradient(140deg, var(--ps-indigo-soft) 0%, var(--ps-indigo) 100%);
+}
+
+/* --------------------------------------------------------------------------
+   7. PAGE HEADER & TOOLBAR
+   -------------------------------------------------------------------------- */
+
+.ps-page {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+    max-width: 1560px;
+    margin: 0 auto;
+}
+
+.ps-pagehead {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 14px;
+    flex-wrap: wrap;
+}
+
+.ps-pagehead__text {
+    min-width: 0;
+}
+
+.ps-pagehead h1 {
+    font-size: 1.5rem;
+}
+
+.ps-pagehead p {
+    margin-top: 4px;
+    color: var(--ps-text-muted);
+    font-size: 0.875rem;
+    max-width: 68ch;
+}
+
+.ps-pagehead__actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.ps-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.ps-toolbar__spacer {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.ps-search {
+    position: relative;
+    flex: 1 1 240px;
+    max-width: 340px;
+    min-width: 0;
+}
+
+.ps-search .ps-icon {
+    position: absolute;
+    top: 50%;
+    left: 12px;
+    transform: translateY(-50%);
+    color: var(--ps-text-soft);
+    pointer-events: none;
+}
+
+.ps-search input {
+    width: 100%;
+    padding-left: 38px;
+}
+
+/* Segmented control (List / Calendar, All Studios / My Studios) */
+.ps-segment {
+    display: inline-flex;
+    padding: 3px;
+    border: 1px solid var(--ps-border);
+    border-radius: 11px;
+    background: var(--ps-surface-3);
+}
+
+.ps-segment__btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    padding: 7px 13px;
+    border: 0;
+    border-radius: 8px;
+    background: none;
+    color: var(--ps-text-muted);
+    font-size: 0.8125rem;
+    font-weight: 500;
+    white-space: nowrap;
+    transition:
+        background-color 0.16s ease,
+        color 0.16s ease,
+        box-shadow 0.16s ease;
+}
+
+.ps-segment__btn:hover {
+    color: var(--ps-text-strong);
+}
+
+.ps-segment__btn[aria-selected="true"],
+.ps-segment__btn.is-active {
+    background: var(--ps-surface);
+    color: var(--ps-text-strong);
+    font-weight: 600;
+    box-shadow: var(--ps-shadow-xs);
+}
+
+/* --------------------------------------------------------------------------
+   8. BUTTONS
+   -------------------------------------------------------------------------- */
+
+.ps-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 40px;
+    padding: 9px 16px;
+    border: 1px solid transparent;
+    border-radius: 10px;
+    background: var(--ps-surface-3);
+    color: var(--ps-text-strong);
+    font-size: 0.875rem;
+    font-weight: 600;
+    line-height: 1.2;
+    text-align: center;
+    text-decoration: none;
+    white-space: nowrap;
+    cursor: pointer;
+    transition:
+        background-color 0.16s ease,
+        border-color 0.16s ease,
+        color 0.16s ease,
+        box-shadow 0.16s ease,
+        transform 0.1s ease;
+}
+
+.ps-btn:hover {
+    text-decoration: none;
+}
+
+.ps-btn:active:not(:disabled) {
+    transform: translateY(1px);
+}
+
+.ps-btn:disabled,
+.ps-btn[aria-disabled="true"] {
+    opacity: 0.55;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.ps-btn--primary {
+    background: var(--ps-primary);
+    color: var(--ps-primary-contrast);
+    box-shadow: 0 3px 10px rgba(217, 154, 43, 0.28);
+}
+
+.ps-btn--primary:hover:not(:disabled) {
+    background: var(--ps-primary-hover);
+}
+
+.ps-btn--secondary {
+    background: var(--ps-surface);
+    border-color: var(--ps-border);
+    color: var(--ps-text);
+}
+
+.ps-btn--secondary:hover:not(:disabled) {
+    background: var(--ps-surface-3);
+    border-color: var(--ps-border-strong);
+}
+
+.ps-btn--ghost {
+    background: transparent;
+    color: var(--ps-text-muted);
+}
+
+.ps-btn--ghost:hover:not(:disabled) {
+    background: var(--ps-surface-3);
+    color: var(--ps-text-strong);
+}
+
+.ps-btn--danger {
+    background: var(--ps-danger);
+    color: #fff;
+}
+
+[data-theme="dark"] .ps-btn--danger {
+    color: #2a0d0a;
+}
+
+.ps-btn--danger:hover:not(:disabled) {
+    filter: brightness(0.94);
+}
+
+.ps-btn--sm {
+    min-height: 34px;
+    padding: 6px 12px;
+    font-size: 0.8125rem;
+    border-radius: 9px;
+}
+
+.ps-btn--lg {
+    min-height: 46px;
+    padding: 12px 22px;
+    font-size: 0.9375rem;
+}
+
+.ps-btn--block {
+    width: 100%;
+}
+
+.ps-btn .ps-icon {
+    flex: none;
+}
+
+/* Loading state — real, driven by aria-busy in JS */
+.ps-btn[data-loading="true"] {
+    pointer-events: none;
+    opacity: 0.75;
+}
+
+.ps-btn__spinner {
+    flex: none;
+    width: 15px;
+    height: 15px;
+    border: 2px solid currentColor;
+    border-right-color: transparent;
+    border-radius: 50%;
+    animation: ps-spin 0.7s linear infinite;
+}
+
+@keyframes ps-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.ps-btn.is-hidden {
+    display: none;
+}
+
+/* Quick action tiles (dashboard) */
+.ps-quick {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    padding: 13px 14px;
+    border: 1px solid var(--ps-border);
+    border-radius: 12px;
+    background: var(--ps-surface);
+    color: var(--ps-text);
+    text-align: left;
+    text-decoration: none;
+    transition:
+        border-color 0.16s ease,
+        background-color 0.16s ease,
+        transform 0.16s ease;
+}
+
+.ps-quick:hover {
+    border-color: var(--ps-amber);
+    background: var(--ps-surface-2);
+    text-decoration: none;
+    transform: translateY(-2px);
+}
+
+.ps-quick__icon {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: var(--ps-primary-soft);
+    color: var(--ps-amber-text);
+}
+
+.ps-quick__text {
+    min-width: 0;
+}
+
+.ps-quick__text strong {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--ps-text-strong);
+}
+
+.ps-quick__text span {
+    display: block;
+    font-size: 0.75rem;
+    color: var(--ps-text-soft);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* --------------------------------------------------------------------------
+   9. CARDS
+   -------------------------------------------------------------------------- */
+
+.ps-card {
+    background: var(--ps-surface);
+    border: 1px solid var(--ps-border);
+    border-radius: 16px;
+    box-shadow: var(--ps-shadow-sm);
+}
+
+.ps-card__head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    padding: 15px 18px;
+    border-bottom: 1px solid var(--ps-border-subtle);
+}
+
+.ps-card__head h2,
+.ps-card__head h3 {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    flex: 1;
+    min-width: 0;
+}
+
+.ps-card__head-actions {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex: none;
+}
+
+.ps-card__body {
+    padding: 18px;
+}
+
+.ps-card__body--flush {
+    padding: 0;
+}
+
+.ps-card__foot {
+    padding: 13px 18px;
+    border-top: 1px solid var(--ps-border-subtle);
+    background: var(--ps-surface-2);
+    border-radius: 0 0 16px 16px;
+}
+
+/* --------------------------------------------------------------------------
+   10. STAT CARDS
+   -------------------------------------------------------------------------- */
+
+.ps-stats {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 14px;
+}
+
+.ps-stat {
+    position: relative;
+    padding: 16px 17px;
+    background: var(--ps-surface);
+    border: 1px solid var(--ps-border);
+    border-radius: 16px;
+    box-shadow: var(--ps-shadow-sm);
+    overflow: hidden;
+}
+
+.ps-stat__label {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 0.8125rem;
+    font-weight: 500;
+    color: var(--ps-text-muted);
+}
+
+.ps-stat__label .ps-icon {
+    color: var(--ps-text-soft);
+}
+
+.ps-stat__value {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 9px;
+    font-family: var(--ps-font-display);
+    font-size: 1.75rem;
+    font-weight: 600;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: var(--ps-text-strong);
+    font-variant-numeric: tabular-nums;
+}
+
+.ps-stat__value--sm {
+    font-size: 1.5rem;
+}
+
+.ps-stat__foot {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    flex-wrap: wrap;
+    margin-top: 8px;
+    font-size: 0.75rem;
+    color: var(--ps-text-soft);
+}
+
+/* Delta pill — always paired with the "vs last period" caption so meaning
+   never depends on colour alone. */
+.ps-delta {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    padding: 2px 7px;
+    border-radius: 99px;
+    font-size: 0.6875rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+}
+
+.ps-delta--up {
+    background: var(--ps-success-bg);
+    color: var(--ps-success);
+}
+
+.ps-delta--down {
+    background: var(--ps-danger-bg);
+    color: var(--ps-danger);
+}
+
+.ps-delta--flat {
+    background: var(--ps-surface-3);
+    color: var(--ps-text-muted);
+}
+
+/* --------------------------------------------------------------------------
+   11. FORMS
+   -------------------------------------------------------------------------- */
+
+.ps-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    min-width: 0;
+}
+
+.ps-field__label {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--ps-text);
+}
+
+.ps-field__hint {
+    font-size: 0.75rem;
+    color: var(--ps-text-soft);
+}
+
+.ps-field__error {
+    display: flex;
+    align-items: flex-start;
+    gap: 5px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--ps-danger);
+}
+
+.ps-field__error:empty {
+    display: none;
+}
+
+.ps-input,
+.ps-select,
+.ps-textarea {
+    width: 100%;
+    min-height: 40px;
+    padding: 9px 12px;
+    border: 1px solid var(--ps-border-strong);
+    border-radius: 10px;
+    background: var(--ps-surface);
+    color: var(--ps-text);
+    font-size: 0.875rem;
+    transition:
+        border-color 0.16s ease,
+        box-shadow 0.16s ease,
+        background-color 0.16s ease;
+}
+
+.ps-textarea {
+    min-height: 96px;
+    padding: 10px 12px;
+    resize: vertical;
+    line-height: 1.5;
+}
+
+.ps-input::placeholder,
+.ps-textarea::placeholder {
+    color: var(--ps-text-soft);
+}
+
+.ps-input:hover,
+.ps-select:hover,
+.ps-textarea:hover {
+    border-color: var(--ps-text-soft);
+}
+
+.ps-input:focus,
+.ps-select:focus,
+.ps-textarea:focus {
+    border-color: var(--ps-primary);
+    box-shadow: 0 0 0 3px var(--ps-primary-soft);
+}
+
+.ps-input[aria-invalid="true"],
+.ps-select[aria-invalid="true"],
+.ps-textarea[aria-invalid="true"] {
+    border-color: var(--ps-danger);
+}
+
+.ps-input[aria-invalid="true"]:focus,
+.ps-select[aria-invalid="true"]:focus,
+.ps-textarea[aria-invalid="true"]:focus {
+    box-shadow: 0 0 0 3px var(--ps-danger-bg);
+}
+
+.ps-input:disabled,
+.ps-select:disabled,
+.ps-textarea:disabled {
+    background: var(--ps-surface-3);
+    color: var(--ps-text-soft);
+    cursor: not-allowed;
+}
+
+/* Native select needs an explicit arrow control */
+.ps-select {
+    appearance: none;
+    padding-right: 34px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%238a93a6' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 10px center;
+    background-size: 16px;
+    cursor: pointer;
+}
+
+/*
+ * Compact select for toolbars and card headers (range pickers, sort menus).
+ * Declared after .ps-select so the reduced width wins on source order.
+ */
+.ps-select--inline {
+    width: auto;
+    max-width: 100%;
+    min-height: 34px;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    font-size: 0.8125rem;
+    font-weight: 500;
+}
+
+.ps-form-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.ps-form-grid > .ps-field--full {
+    grid-column: 1 / -1;
+}
+
+.ps-form-error {
+    display: flex;
+    align-items: flex-start;
+    gap: 9px;
+    padding: 11px 13px;
+    border: 1px solid var(--ps-danger-border);
+    border-radius: 11px;
+    background: var(--ps-danger-bg);
+    color: var(--ps-danger);
+    font-size: 0.8125rem;
+    font-weight: 500;
+}
+
+.ps-form-error:empty {
+    display: none;
+}
+
+.ps-form-error .ps-icon {
+    flex: none;
+    margin-top: 1px;
+}
+
+/* Switch */
+.ps-switch {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    cursor: pointer;
+    user-select: none;
+}
+
+.ps-switch input {
+    position: absolute;
+    opacity: 0;
+    width: 1px;
+    height: 1px;
+}
+
+.ps-switch__track {
+    position: relative;
+    flex: none;
+    width: 38px;
+    height: 22px;
+    border-radius: 99px;
+    background: var(--ps-border-strong);
+    transition: background-color 0.18s ease;
+}
+
+.ps-switch__track::after {
+    content: "";
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    background: #fff;
+    box-shadow: var(--ps-shadow-xs);
+    transition: transform 0.18s ease;
+}
+
+.ps-switch input:checked + .ps-switch__track {
+    background: var(--ps-success);
+}
+
+.ps-switch input:checked + .ps-switch__track::after {
+    transform: translateX(16px);
+}
+
+.ps-switch input:focus-visible + .ps-switch__track {
+    outline: 2px solid var(--ps-focus-ring);
+    outline-offset: 2px;
+}
+
+.ps-switch__text {
+    font-size: 0.8125rem;
+    font-weight: 500;
+}
+
+/* --------------------------------------------------------------------------
+   12. STATUS BADGES
+   Colour is never the only signal: every badge carries a glyph + text label.
+   -------------------------------------------------------------------------- */
+
+.ps-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 9px 3px 7px;
+    border: 1px solid transparent;
+    border-radius: 99px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    line-height: 1.5;
+    white-space: nowrap;
+}
+
+.ps-badge__dot {
+    flex: none;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+}
+
+.ps-badge--neutral  { background: var(--ps-surface-3); color: var(--ps-text-muted); border-color: var(--ps-border); }
+.ps-badge--success  { background: var(--ps-success-bg); color: var(--ps-success); border-color: var(--ps-success-border); }
+.ps-badge--danger   { background: var(--ps-danger-bg); color: var(--ps-danger); border-color: var(--ps-danger-border); }
+.ps-badge--warning  { background: var(--ps-warning-bg); color: var(--ps-warning); border-color: var(--ps-warning-border); }
+.ps-badge--info     { background: var(--ps-info-bg); color: var(--ps-info); border-color: var(--ps-info-border); }
+.ps-badge--violet   { background: var(--ps-violet-bg); color: var(--ps-violet); border-color: var(--ps-violet-border); }
+.ps-badge--teal     { background: var(--ps-teal-bg); color: var(--ps-teal); border-color: var(--ps-teal-border); }
+
+.ps-badge--solid {
+    border-color: transparent;
+}
+
+.ps-badge--solid.ps-badge--success { background: var(--ps-success); color: #fff; }
+.ps-badge--solid.ps-badge--danger  { background: var(--ps-danger); color: #fff; }
+.ps-badge--solid.ps-badge--warning { background: var(--ps-amber); color: var(--ps-primary-contrast); }
+.ps-badge--solid.ps-badge--info    { background: var(--ps-info); color: #fff; }
+.ps-badge--solid.ps-badge--violet  { background: var(--ps-violet); color: #fff; }
+.ps-badge--solid.ps-badge--teal    { background: var(--ps-teal); color: #fff; }
+.ps-badge--solid.ps-badge--neutral { background: var(--ps-text-muted); color: #fff; }
+
+[data-theme="dark"] .ps-badge--solid.ps-badge--success,
+[data-theme="dark"] .ps-badge--solid.ps-badge--danger,
+[data-theme="dark"] .ps-badge--solid.ps-badge--info,
+[data-theme="dark"] .ps-badge--solid.ps-badge--violet,
+[data-theme="dark"] .ps-badge--solid.ps-badge--teal,
+[data-theme="dark"] .ps-badge--solid.ps-badge--neutral {
+    color: #10161f;
+}
+
+/* --------------------------------------------------------------------------
+   13. TABLES
+   -------------------------------------------------------------------------- */
+
+.ps-table-wrap {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.ps-table {
+    min-width: 720px;
+    font-size: 0.875rem;
+}
+
+.ps-table thead th {
+    padding: 11px 16px;
+    background: var(--ps-surface-2);
+    border-bottom: 1px solid var(--ps-border);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--ps-text-soft);
+    text-align: left;
+    white-space: nowrap;
+}
+
+.ps-table tbody td {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--ps-border-subtle);
+    color: var(--ps-text);
+    vertical-align: middle;
+}
+
+.ps-table tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+.ps-table tbody tr {
+    transition: background-color 0.14s ease;
+}
+
+.ps-table tbody tr:hover {
+    background: var(--ps-surface-2);
+}
+
+.ps-table .num {
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+}
+
+.ps-table .actions {
+    text-align: right;
+    white-space: nowrap;
+}
+
+.ps-table__primary {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 0;
+}
+
+.ps-table__primary strong {
+    display: block;
+    font-weight: 600;
+    color: var(--ps-text-strong);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.ps-table__primary small {
+    display: block;
+    font-size: 0.75rem;
+    color: var(--ps-text-soft);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.ps-row-btn {
+    border: 0;
+    background: none;
+    padding: 0;
+    font: inherit;
+    color: inherit;
+    text-align: left;
+    cursor: pointer;
+}
+
+.ps-row-btn:hover strong {
+    color: var(--ps-primary);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+
+/* --------------------------------------------------------------------------
+   14. MODALS & DRAWERS
+   -------------------------------------------------------------------------- */
+
+.ps-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+}
+
+.ps-modal.is-open {
+    display: flex;
+}
+
+.ps-modal__backdrop {
+    position: fixed;
+    inset: 0;
+    background: var(--ps-overlay);
+    border: 0;
+    padding: 0;
+    cursor: default;
+    animation: ps-fade-in 0.18s ease;
+}
+
+.ps-modal__panel {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 560px;
+    max-height: calc(100dvh - 40px);
+    margin: auto;
+    border: 1px solid var(--ps-border);
+    border-radius: 18px;
+    background: var(--ps-surface);
+    box-shadow: var(--ps-shadow-xl);
+    animation: ps-modal-in 0.22s cubic-bezier(0.2, 0.8, 0.3, 1);
+    overflow: hidden;
+}
+
+/*
+ * A modal whose entire body is a <form>. This is a shared pattern (used by the
+ * owner equipment manager and the artist upload / reschedule / review dialogs),
+ * so it lives here rather than in any one page stylesheet.
+ */
+.ps-modal__form {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    max-height: calc(100dvh - 40px);
+}
+
+@media (max-width: 767px) {
+    .ps-modal__form {
+        max-height: 92dvh;
+    }
+}
+
+.ps-modal__panel--lg {
+    max-width: 720px;
+}
+
+.ps-modal__panel--sm {
+    max-width: 420px;
+}
+
+@keyframes ps-fade-in {
+    from {
+        opacity: 0;
+    }
+}
+
+@keyframes ps-modal-in {
+    from {
+        opacity: 0;
+        transform: translateY(14px) scale(0.985);
+    }
+}
+
+/* Bottom-sheet presentation used on phones */
+@keyframes ps-sheet-in {
+    from {
+        opacity: 0;
+        transform: translateY(32px);
+    }
+}
+
+.ps-modal__head {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 17px 20px;
+    border-bottom: 1px solid var(--ps-border-subtle);
+}
+
+.ps-modal__head-text {
+    flex: 1;
+    min-width: 0;
+}
+
+.ps-modal__head h2 {
+    font-size: 1.0625rem;
+}
+
+.ps-modal__head p {
+    margin-top: 3px;
+    font-size: 0.8125rem;
+    color: var(--ps-text-muted);
+}
+
+.ps-modal__body {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+}
+
+.ps-modal__foot {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 9px;
+    flex-wrap: wrap;
+    padding: 15px 20px;
+    border-top: 1px solid var(--ps-border-subtle);
+    background: var(--ps-surface-2);
+}
+
+body.ps-modal-open {
+    overflow: hidden;
+}
+
+/* Locked while the off-canvas navigation drawer is open */
+body.ps-nav-open {
+    overflow: hidden;
+}
+
+/* Definition list used inside detail modals */
+.ps-dl {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 0;
+}
+
+.ps-dl__row {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 14px;
+    padding: 10px 0;
+    border-bottom: 1px solid var(--ps-border-subtle);
+    min-width: 0;
+}
+
+.ps-dl__row:last-child {
+    border-bottom: 0;
+}
+
+.ps-dl__row dt {
+    flex: none;
+    font-size: 0.8125rem;
+    color: var(--ps-text-muted);
+}
+
+.ps-dl__row dd {
+    margin: 0;
+    min-width: 0;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--ps-text-strong);
+    text-align: right;
+    overflow-wrap: anywhere;
+}
+
+.ps-dl--stacked .ps-dl__row {
+    flex-direction: column;
+    gap: 3px;
+}
+
+.ps-dl--stacked .ps-dl__row dd {
+    text-align: left;
+    font-weight: 500;
+}
+
+/* --------------------------------------------------------------------------
+   15. TOASTS
+   -------------------------------------------------------------------------- */
+
+.ps-toasts {
+    position: fixed;
+    z-index: 300;
+    right: 18px;
+    bottom: 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+    width: min(380px, calc(100vw - 32px));
+    pointer-events: none;
+}
+
+.ps-toast {
+    display: flex;
+    align-items: flex-start;
+    gap: 11px;
+    padding: 13px 14px;
+    border: 1px solid var(--ps-border);
+    border-left: 3px solid var(--ps-text-soft);
+    border-radius: 12px;
+    background: var(--ps-surface);
+    box-shadow: var(--ps-shadow-lg);
+    pointer-events: auto;
+    animation: ps-toast-in 0.22s cubic-bezier(0.2, 0.8, 0.3, 1);
+}
+
+.ps-toast.is-leaving {
+    animation: ps-toast-out 0.18s ease forwards;
+}
+
+@keyframes ps-toast-in {
+    from {
+        opacity: 0;
+        transform: translateX(18px);
+    }
+}
+
+@keyframes ps-toast-out {
+    to {
+        opacity: 0;
+        transform: translateX(18px);
+    }
+}
+
+.ps-toast__icon {
+    flex: none;
+    margin-top: 1px;
+}
+
+.ps-toast__body {
+    flex: 1;
+    min-width: 0;
+}
+
+.ps-toast__title {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--ps-text-strong);
+}
+
+.ps-toast__msg {
+    margin-top: 2px;
+    font-size: 0.8125rem;
+    color: var(--ps-text-muted);
+    overflow-wrap: anywhere;
+}
+
+.ps-toast__close {
+    flex: none;
+    padding: 2px;
+    border: 0;
+    border-radius: 6px;
+    background: none;
+    color: var(--ps-text-soft);
+}
+
+.ps-toast__close:hover {
+    background: var(--ps-surface-3);
+    color: var(--ps-text-strong);
+}
+
+.ps-toast--success {
+    border-left-color: var(--ps-success);
+}
+.ps-toast--success .ps-toast__icon {
+    color: var(--ps-success);
+}
+
+.ps-toast--error {
+    border-left-color: var(--ps-danger);
+}
+.ps-toast--error .ps-toast__icon {
+    color: var(--ps-danger);
+}
+
+.ps-toast--warning {
+    border-left-color: var(--ps-warning);
+}
+.ps-toast--warning .ps-toast__icon {
+    color: var(--ps-warning);
+}
+
+.ps-toast--info {
+    border-left-color: var(--ps-info);
+}
+.ps-toast--info .ps-toast__icon {
+    color: var(--ps-info);
+}
+
+/* --------------------------------------------------------------------------
+   16. STATES — loading / empty / error
+   -------------------------------------------------------------------------- */
+
+.ps-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 46px 24px;
+    text-align: center;
+}
+
+.ps-state__icon {
+    display: grid;
+    place-items: center;
+    width: 54px;
+    height: 54px;
+    border-radius: 16px;
+    background: var(--ps-surface-3);
+    color: var(--ps-text-soft);
+}
+
+.ps-state__title {
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--ps-text-strong);
+}
+
+.ps-state__msg {
+    max-width: 42ch;
+    font-size: 0.875rem;
+    color: var(--ps-text-muted);
+}
+
+.ps-state--error .ps-state__icon {
+    background: var(--ps-danger-bg);
+    color: var(--ps-danger);
+}
+
+.ps-state--compact {
+    padding: 28px 18px;
+}
+
+.ps-state--compact .ps-state__icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+}
+
+/* Skeleton placeholders driven by real loading states */
+.ps-skel {
+    background: linear-gradient(
+        90deg,
+        var(--ps-surface-3) 25%,
+        var(--ps-surface-2) 37%,
+        var(--ps-surface-3) 63%
+    );
+    background-size: 400% 100%;
+    border-radius: 6px;
+    animation: ps-skel 1.3s ease-in-out infinite;
+}
+
+@keyframes ps-skel {
+    from {
+        background-position: 100% 50%;
+    }
+    to {
+        background-position: 0 50%;
+    }
+}
+
+.ps-skel--line {
+    height: 11px;
+}
+
+.ps-skel--title {
+    height: 15px;
+    width: 62%;
+}
+
+.ps-skel--block {
+    height: 100%;
+    min-height: 120px;
+    border-radius: 12px;
+}
+
+/* Inline spinner for regions without skeleton */
+.ps-spinner {
+    width: 22px;
+    height: 22px;
+    border: 2.5px solid var(--ps-border-strong);
+    border-right-color: var(--ps-primary);
+    border-radius: 50%;
+    animation: ps-spin 0.7s linear infinite;
+}
+
+.ps-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 34px;
+    font-size: 0.875rem;
+    color: var(--ps-text-muted);
+}
+
+/* --------------------------------------------------------------------------
+   17. TOOLTIPS
+   -------------------------------------------------------------------------- */
+
+[data-ps-tip] {
+    position: relative;
+}
+
+[data-ps-tip]::after {
+    content: attr(data-ps-tip);
+    position: absolute;
+    bottom: calc(100% + 7px);
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 250;
+    padding: 5px 9px;
+    border-radius: 7px;
+    background: var(--ps-text-strong);
+    color: var(--ps-surface);
+    font-size: 0.75rem;
+    font-weight: 500;
+    white-space: nowrap;
+    pointer-events: none;
+    /*
+     * A hidden tooltip is display:none rather than visibility:hidden. A
+     * visibility:hidden box is still laid out, so a wide tip silently extends
+     * its ancestors' scrollable area - which showed up as a phantom 29px
+     * horizontal scrollbar on the bookings table. clip-path does not help:
+     * it clips painting, not layout.
+     *
+     * Because an element that has just been un-hidden cannot transition, the
+     * fade is a keyframe instead, which replays on every hover.
+     */
+    display: none;
+}
+
+[data-ps-tip]:hover::after,
+[data-ps-tip]:focus-visible::after {
+    display: block;
+    animation: ps-tip-in 0.14s ease both;
+}
+
+@keyframes ps-tip-in {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+/* --------------------------------------------------------------------------
+   18. LAYOUT UTILITIES
+   -------------------------------------------------------------------------- */
+
+.ps-grid {
+    display: grid;
+    gap: 16px;
+}
+
+.ps-grid--2 {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+}
+
+.ps-grid--main-side {
+    grid-template-columns: minmax(0, 1.65fr) minmax(300px, 1fr);
+    align-items: start;
+}
+
+/*
+ * Two equal columns that collapse to one when either would get cramped.
+ * The min() is what lets the floor drop below 340px on a 320px phone -
+ * plain minmax(340px, 1fr) would force a 340px track and overflow.
+ */
+.ps-grid--halves {
+    grid-template-columns: repeat(auto-fit, minmax(min(340px, 100%), 1fr));
+    align-items: stretch;
+}
+
+.ps-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.ps-row {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    flex-wrap: wrap;
+}
+
+.ps-row--between {
+    justify-content: space-between;
+}
+
+.ps-divider {
+    height: 1px;
+    background: var(--ps-border-subtle);
+    margin: 14px 0;
+}
+
+/* Chart canvas host — always sized by the parent, never fixed width */
+.ps-chartbox {
+    position: relative;
+    width: 100%;
+    min-width: 0;
+}
+
+.ps-chartbox--sm {
+    height: 190px;
+}
+
+.ps-chartbox--md {
+    height: 250px;
+}
+
+.ps-chartbox--lg {
+    height: 320px;
+}
+
+/* --------------------------------------------------------------------------
+   19. BOTTOM NAVIGATION (phone)
+   -------------------------------------------------------------------------- */
+
+.ps-bottomnav {
+    display: none;
+}
+
+/* --------------------------------------------------------------------------
+   20. RESPONSIVE
+   -------------------------------------------------------------------------- */
+
+/* <= 1439px — compact desktop */
+@media (max-width: 1439px) {
+    .ps-content {
+        padding: 20px 22px 40px;
+    }
+}
+
+/* <= 1279px — narrower sidebar */
+@media (max-width: 1279px) {
+    .ps-shell {
+        --ps-sidebar-w: 226px;
+    }
+
+    .ps-brand__name {
+        font-size: 0.875rem;
+    }
+}
+
+/* <= 1199px — laptop */
+@media (max-width: 1199px) {
+    .ps-stats {
+        grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+    }
+
+    .ps-grid--main-side {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+/* <= 1023px — tablet landscape: sidebar becomes an off-canvas drawer */
+@media (max-width: 1023px) {
+    .ps-shell {
+        --ps-sidebar-w: 264px;
+    }
+
+    .ps-sidebar {
+        transform: translateX(-100%);
+        box-shadow: none;
+        will-change: transform;
+    }
+
+    .ps-shell.is-nav-open .ps-sidebar {
+        transform: translateX(0);
+        box-shadow: var(--ps-shadow-xl);
+    }
+
+    .ps-main {
+        margin-left: 0;
+    }
+
+    .ps-iconbtn.ps-topbar__burger {
+        display: grid;
+    }
+
+    .ps-usermenu__meta {
+        display: block;
+    }
+
+    .ps-stat__value {
+        font-size: 1.625rem;
+    }
+}
+
+/* <= 900px */
+@media (max-width: 900px) {
+    .ps-form-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+/* <= 767px — phone: drawer + bottom navigation */
+@media (max-width: 767px) {
+    body {
+        font-size: 14.5px;
+    }
+
+    .ps-topbar {
+        min-height: 58px;
+        padding: 8px 14px;
+        gap: 8px;
+    }
+
+    .ps-topbar__title {
+        font-size: 1rem;
+        text-align: center;
+    }
+
+    .ps-topbar__actions {
+        gap: 6px;
+    }
+
+    .ps-content {
+        padding: 16px 14px 96px;
+    }
+
+    .ps-page {
+        gap: 14px;
+    }
+
+    .ps-pagehead h1 {
+        font-size: 1.25rem;
+    }
+
+    .ps-usermenu__meta {
+        display: none;
+    }
+
+    .ps-usermenu__trigger {
+        padding: 3px;
+    }
+
+    .ps-usermenu__trigger > .ps-icon {
+        display: none;
+    }
+
+    .ps-iconbtn,
+    .ps-theme-toggle {
+        width: 36px;
+        height: 36px;
+    }
+
+    .ps-select--inline {
+        min-height: 36px;
+    }
+
+    /* Two-column stat grid on phones */
+    .ps-stats {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+    }
+
+    .ps-stat {
+        padding: 13px 13px;
+        border-radius: 14px;
+    }
+
+    .ps-stat__label {
+        font-size: 0.75rem;
+    }
+
+    .ps-stat__value {
+        margin-top: 6px;
+        font-size: 1.375rem;
+    }
+
+    .ps-stat__value--sm {
+        font-size: 1.25rem;
+    }
+
+    .ps-stat__foot {
+        margin-top: 6px;
+        font-size: 0.6875rem;
+    }
+
+    .ps-card__head {
+        padding: 13px 14px;
+    }
+
+    .ps-card__body {
+        padding: 14px;
+    }
+
+    .ps-btn {
+        min-height: 42px;
+    }
+
+    .ps-btn--sm {
+        min-height: 36px;
+    }
+
+    .ps-toolbar {
+        gap: 8px;
+    }
+
+    .ps-search {
+        flex: 1 1 100%;
+        max-width: none;
+    }
+
+    .ps-pagehead__actions {
+        width: 100%;
+    }
+
+    .ps-pagehead__actions .ps-btn {
+        flex: 1 1 auto;
+    }
+
+    .ps-modal {
+        padding: 0;
+        align-items: flex-end;
+    }
+
+    .ps-modal__panel {
+        max-width: none;
+        max-height: 92dvh;
+        border-radius: 18px 18px 0 0;
+        animation: ps-sheet-in 0.24s cubic-bezier(0.2, 0.8, 0.3, 1);
+    }
+
+    .ps-modal__head,
+    .ps-modal__body,
+    .ps-modal__foot {
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+
+    .ps-modal__foot .ps-btn {
+        flex: 1 1 auto;
+    }
+
+    .ps-toasts {
+        right: 12px;
+        left: 12px;
+        bottom: 82px;
+        width: auto;
+    }
+
+    .ps-chartbox--lg {
+        height: 240px;
+    }
+
+    .ps-chartbox--md {
+        height: 220px;
+    }
+
+    /* Bottom navigation */
+    .ps-bottomnav {
+        position: fixed;
+        inset: auto 0 0 0;
+        z-index: 110;
+        display: flex;
+        align-items: stretch;
+        justify-content: space-around;
+        gap: 2px;
+        padding: 6px 4px calc(6px + env(safe-area-inset-bottom, 0px));
+        background: var(--ps-surface);
+        border-top: 1px solid var(--ps-border);
+        box-shadow: 0 -2px 14px rgba(19, 25, 40, 0.07);
+    }
+
+    [data-theme="dark"] .ps-bottomnav {
+        box-shadow: 0 -2px 14px rgba(0, 0, 0, 0.5);
+    }
+
+    .ps-bottomnav__link {
+        position: relative;
+        flex: 1 1 0;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 3px;
+        min-width: 0;
+        min-height: 52px;
+        padding: 4px 2px;
+        border-radius: 10px;
+        color: var(--ps-text-soft);
+        font-size: 0.625rem;
+        font-weight: 600;
+        letter-spacing: 0.01em;
+        text-decoration: none;
+        transition:
+            color 0.16s ease,
+            background-color 0.16s ease;
+    }
+
+    .ps-bottomnav__link:hover {
+        text-decoration: none;
+    }
+
+    .ps-bottomnav__link.is-active {
+        color: var(--ps-primary);
+    }
+
+    .ps-bottomnav__link.is-active::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 22px;
+        height: 3px;
+        border-radius: 0 0 3px 3px;
+        background: var(--ps-primary);
+    }
+
+    .ps-bottomnav__label {
+        max-width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+}
+
+/* <= 479px — large phone */
+@media (max-width: 479px) {
+    .ps-content {
+        padding: 14px 12px 94px;
+    }
+
+    .ps-pagehead {
+        gap: 10px;
+    }
+
+    .ps-pagehead h1 {
+        font-size: 1.125rem;
+    }
+
+    .ps-stat {
+        padding: 12px 11px;
+    }
+
+    .ps-stat__value {
+        font-size: 1.25rem;
+    }
+
+    .ps-stat__label {
+        font-size: 0.6875rem;
+        gap: 5px;
+    }
+
+    .ps-stat__label .ps-icon {
+        display: none;
+    }
+
+    .ps-bottomnav__link {
+        font-size: 0.5625rem;
+        min-height: 50px;
+    }
+
+    .ps-segment__btn {
+        padding: 7px 10px;
+        font-size: 0.75rem;
+    }
+
+    .ps-modal__body {
+        padding: 16px;
+    }
+
+    .ps-chartbox--md,
+    .ps-chartbox--sm {
+        height: 200px;
+    }
+
+    .ps-chartbox--lg {
+        height: 220px;
+    }
+}
+
+/* <= 400px */
+@media (max-width: 400px) {
+    .ps-usermenu__trigger {
+        border-color: transparent;
+    }
+
+    .ps-stats {
+        gap: 8px;
+    }
+
+    .ps-stat__foot .ps-delta {
+        font-size: 0.625rem;
+    }
+}
+
+/* <= 359px — small phone baseline (320px) */
+@media (max-width: 359px) {
+    body {
+        font-size: 14px;
+    }
+
+    .ps-content {
+        padding: 12px 10px 92px;
+    }
+
+    .ps-topbar {
+        padding: 7px 10px;
+    }
+
+    .ps-topbar__title {
+        font-size: 0.9375rem;
+    }
+
+    .ps-iconbtn,
+    .ps-theme-toggle {
+        width: 34px;
+        height: 34px;
+        font-size: 15px;
+    }
+
+    .ps-avatar {
+        width: 32px;
+        height: 32px;
+        font-size: 0.6875rem;
+    }
+
+    .ps-stats {
+        gap: 8px;
+    }
+
+    .ps-stat {
+        padding: 10px;
+        border-radius: 12px;
+    }
+
+    .ps-stat__value {
+        font-size: 1.0625rem;
+    }
+
+    .ps-stat__label {
+        font-size: 0.625rem;
+    }
+
+    .ps-stat__foot {
+        font-size: 0.625rem;
+    }
+
+    .ps-bottomnav {
+        padding-left: 2px;
+        padding-right: 2px;
+    }
+
+    .ps-bottomnav__link {
+        font-size: 0.5rem;
+        gap: 2px;
+        min-height: 48px;
+    }
+
+    .ps-bottomnav__label {
+        font-size: 0.5rem;
+    }
+
+    .ps-pagehead h1 {
+        font-size: 1.0625rem;
+    }
+
+    .ps-btn {
+        padding: 9px 12px;
+        font-size: 0.8125rem;
+    }
+
+    .ps-modal__head h2 {
+        font-size: 1rem;
+    }
+
+    .ps-card__head h2,
+    .ps-card__head h3 {
+        font-size: 0.875rem;
+    }
+}
+
+/* --------------------------------------------------------------------------
+   21. FULLCALENDAR THEMING
+   FullCalendar v6 injects its own stylesheet; these rules re-skin it with the
+   Paradise tokens so the calendar follows light/dark mode.
+   -------------------------------------------------------------------------- */
+
+.ps-calendar {
+    --fc-border-color: var(--ps-border);
+    --fc-page-bg-color: transparent;
+    --fc-neutral-bg-color: var(--ps-surface-2);
+    --fc-today-bg-color: var(--ps-cal-today-bg);
+    color: var(--ps-text);
+    font-size: 0.875rem;
+}
+
+.ps-calendar .fc {
+    --fc-border-color: var(--ps-border);
+    --fc-page-bg-color: transparent;
+    --fc-neutral-bg-color: var(--ps-surface-2);
+    --fc-today-bg-color: var(--ps-cal-today-bg);
+    --fc-now-indicator-color: var(--ps-amber);
+}
+
+.ps-calendar .fc-theme-standard td,
+.ps-calendar .fc-theme-standard th,
+.ps-calendar .fc-scrollgrid {
+    border-color: var(--ps-border);
+}
+
+.ps-calendar .fc-col-header-cell {
+    background: var(--ps-surface-2);
+}
+
+.ps-calendar .fc-col-header-cell-cushion {
+    padding: 10px 4px;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--ps-text-soft);
+    text-decoration: none;
+}
+
+.ps-calendar .fc-daygrid-day-number {
+    padding: 6px 7px;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--ps-text-muted);
+    text-decoration: none;
+}
+
+.ps-calendar .fc-day-today .fc-daygrid-day-number {
+    display: inline-grid;
+    place-items: center;
+    min-width: 24px;
+    height: 24px;
+    padding: 0 6px;
+    border-radius: 99px;
+    background: var(--ps-amber);
+    color: var(--ps-primary-contrast);
+}
+
+.ps-calendar .fc-day-other .fc-daygrid-day-number {
+    color: var(--ps-text-soft);
+    opacity: 0.6;
+}
+
+.ps-calendar .fc-daygrid-day.fc-day-other {
+    background: var(--ps-cal-day-other);
+}
+
+.ps-calendar .fc-daygrid-day:hover {
+    background: var(--ps-surface-3);
+}
+
+.ps-calendar .fc-daygrid-event {
+    margin: 1px 4px;
+    padding: 2px 6px;
+    border: 0;
+    border-left: 3px solid currentColor;
+    border-radius: 5px;
+    background: var(--ps-surface-3);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    line-height: 1.5;
+    cursor: pointer;
+    overflow: hidden;
+}
+
+.ps-calendar .fc-daygrid-event:hover {
+    filter: brightness(0.97);
+}
+
+[data-theme="dark"] .ps-calendar .fc-daygrid-event:hover {
+    filter: brightness(1.14);
+}
+
+.ps-calendar .fc-event-title,
+.ps-calendar .fc-event-time {
+    font-weight: 600;
+}
+
+.ps-calendar .fc-daygrid-more-link {
+    color: var(--ps-primary);
+    font-weight: 600;
+    font-size: 0.6875rem;
+}
+
+.ps-calendar .fc-toolbar.fc-header-toolbar {
+    display: none;
+}
+
+.ps-calendar .fc-list {
+    border-color: var(--ps-border);
+}
+
+.ps-calendar .fc-list-day-cushion {
+    background: var(--ps-surface-2);
+}
+
+.ps-calendar .fc-list-event:hover td {
+    background: var(--ps-surface-3);
+}
+
+.ps-calendar .fc-list-event-title a {
+    color: var(--ps-text-strong);
+}
+
+.ps-calendar .fc-list-empty,
+.ps-calendar .fc-list-table td {
+    background: var(--ps-surface);
+    color: var(--ps-text);
+}
+
+.ps-calendar .fc-button {
+    background: var(--ps-surface) !important;
+    border-color: var(--ps-border) !important;
+    color: var(--ps-text) !important;
+    box-shadow: none !important;
+    font-size: 0.8125rem !important;
+    font-weight: 600 !important;
+    text-transform: capitalize;
+}
+
+.ps-calendar .fc-button:hover {
+    background: var(--ps-surface-3) !important;
+}
+
+.ps-calendar .fc-button-primary:not(:disabled).fc-button-active,
+.ps-calendar .fc-button-primary:not(:disabled):active {
+    background: var(--ps-amber) !important;
+    border-color: var(--ps-amber) !important;
+    color: var(--ps-primary-contrast) !important;
+}
+
+/* --------------------------------------------------------------------------
+   22. CHART.JS CONTAINER SAFETY
+   -------------------------------------------------------------------------- */
+
+.ps-chartbox canvas {
+    max-width: 100% !important;
+}
+
+canvas:focus-visible {
+    outline: 2px solid var(--ps-focus-ring);
+    outline-offset: 2px;
+}

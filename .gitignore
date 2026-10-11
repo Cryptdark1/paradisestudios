@@ -1,0 +1,19 @@
+# Paradise Studios
+# Secrets and machine-local files must never be committed.
+
+# Real environment file (the copy, never the example template)
+.env
+*.env
+paradisestudios.env
+
+# Keep the committed template even though the rules above are broad
+!config/.env.example
+
+# Vendor / dependency installers
+/vendor/
+composer.lock
+composer.phar
+
+# Local tooling scratch
+/tests/.tmp/
+*.log

@@ -1,0 +1,258 @@
+/* ==========================================================================
+   PARADISE STUDIOS — MY BOOKINGS
+   ========================================================================== */
+
+.ps-req {
+    color: var(--ps-danger);
+    font-weight: 700;
+}
+
+.ps-booking-note {
+    display: flex;
+    align-items: flex-start;
+    gap: 7px;
+    font-size: 0.75rem;
+    line-height: 1.5;
+    color: var(--ps-text-soft);
+}
+
+.ps-booking-note .ps-icon {
+    flex: none;
+    margin-top: 1px;
+}
+
+/* --------------------------------------------------------------------------
+   1. TABLE WIDTH
+   --------------------------------------------------------------------------
+   Six columns of data. Above the 1199px breakpoint the table is laid out as a
+   real table, which needs about 830px - reachable there, so it never has to
+   scroll sideways. Below it the rows become cards (see `.ps-stateline--cards`
+   in artist-shared.css).
+   -------------------------------------------------------------------------- */
+
+.ps-stateline--bookings {
+    min-width: 0;
+}
+
+/* --------------------------------------------------------------------------
+   2. ACTION GROUP
+   -------------------------------------------------------------------------- */
+
+.ps-bkactions {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+}
+
+/*
+ * The buttons must not be squeezed below the width of their own label. With
+ * the default flex-shrink of 1, a narrow Actions cell compressed them (a
+ * "Complete" button rendered 85px wide around 128px of text), which pushed the
+ * table 29px wider than its container and gave the card a sideways scrollbar.
+ * flex-wrap already handles the narrow case by stacking them instead.
+ */
+.ps-bkactions .ps-btn {
+    flex: 0 0 auto;
+}
+
+/* --------------------------------------------------------------------------
+   3. MODAL DETAIL
+   -------------------------------------------------------------------------- */
+
+.ps-bkdetail__studio {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 13px 14px;
+    border: 1px solid var(--ps-border);
+    border-radius: 13px;
+    background: var(--ps-surface-2);
+    margin-bottom: 14px;
+}
+
+.ps-bkdetail__text {
+    min-width: 0;
+}
+
+.ps-bkdetail__name {
+    display: block;
+    font-family: var(--ps-font-display);
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--ps-text-strong);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.ps-bkdetail__where {
+    display: block;
+    margin-top: 2px;
+    font-size: 0.75rem;
+    color: var(--ps-text-muted);
+    overflow-wrap: anywhere;
+}
+
+.ps-bkdetail__amount {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-top: 14px;
+    padding: 13px 14px;
+    border: 1px solid var(--ps-primary-soft);
+    border-radius: 13px;
+    background: var(--ps-primary-soft);
+}
+
+.ps-bkdetail__amount-label {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--ps-text-strong);
+}
+
+.ps-bkdetail__amount small {
+    display: block;
+    margin-top: 2px;
+    font-size: 0.6875rem;
+    font-weight: 500;
+    color: var(--ps-text-muted);
+}
+
+.ps-bkdetail__amount-value {
+    font-family: var(--ps-font-display);
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--ps-amber-text);
+    font-variant-numeric: tabular-nums;
+}
+
+/* --------------------------------------------------------------------------
+   4. REFUND NOTICE
+   cancel-booking.php returns a refund_percentage / refund_amount, but no real
+   transfer occurs. The wording is deliberately explicit about that.
+   -------------------------------------------------------------------------- */
+
+.ps-refund-note {
+    display: flex;
+    align-items: flex-start;
+    gap: 9px;
+    margin-top: 14px;
+    padding: 12px 13px;
+    border: 1px solid var(--ps-info-border);
+    border-radius: 12px;
+    background: var(--ps-info-bg);
+    font-size: 0.8125rem;
+    line-height: 1.5;
+    color: var(--ps-text-muted);
+}
+
+.ps-refund-note .ps-icon {
+    flex: none;
+    margin-top: 1px;
+    color: var(--ps-info);
+}
+
+.ps-refund-note strong {
+    color: var(--ps-text-strong);
+}
+
+/* --------------------------------------------------------------------------
+   5. STATUS EXPLANATION
+   Small helper line under the table so the status vocabulary is clear.
+   -------------------------------------------------------------------------- */
+
+.ps-legend-note {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 11px 16px;
+    font-size: 0.75rem;
+    color: var(--ps-text-soft);
+    border-top: 1px solid var(--ps-border-subtle);
+}
+
+/* --------------------------------------------------------------------------
+   6. RESPONSIVE
+   --------------------------------------------------------------------------
+   The card-mode itself (table rows becoming stacked cards) lives in
+   artist-shared.css as `.ps-stateline--cards`, because the dashboard's
+   "Recent booking" table needs exactly the same treatment. Only the
+   bookings-specific tweaks remain here.
+   -------------------------------------------------------------------------- */
+
+/* <= 900px — rows become cards */
+@media (max-width: 900px) {
+    /* Studio cell becomes the card header */
+    .ps-stateline--bookings tbody td[data-label="Studio"] {
+        padding-bottom: 8px;
+        margin-bottom: 4px;
+        border-bottom: 1px solid var(--ps-border-subtle);
+    }
+
+    .ps-stateline--bookings tbody td[data-label="Studio"]::before {
+        display: none;
+    }
+
+    .ps-stateline--bookings .ps-stateline__who {
+        justify-content: flex-end;
+        text-align: right;
+    }
+
+    .ps-bkactions {
+        width: 100%;
+    }
+
+    .ps-bkactions .ps-btn {
+        flex: 1 1 auto;
+        justify-content: center;
+    }
+}
+
+/* <= 767px — phone */
+@media (max-width: 767px) {
+    .ps-stateline--bookings tbody td {
+        font-size: 0.8125rem;
+    }
+
+    .ps-bkdetail__amount {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
+    }
+
+    .ps-bkdetail__amount-value {
+        font-size: 1.125rem;
+    }
+}
+
+/* <= 479px */
+@media (max-width: 479px) {
+    .ps-stateline--bookings tbody tr {
+        padding: 10px 12px;
+    }
+
+    /* Two actions per row keeps buttons from becoming unusably small. */
+    .ps-bkactions .ps-btn {
+        flex: 1 1 45%;
+    }
+
+    .ps-bkactions .ps-btn--ghost:only-child {
+        flex: 1 1 100%;
+    }
+}
+
+/* <= 359px — 320px baseline */
+@media (max-width: 359px) {
+    .ps-stateline--bookings tbody td {
+        gap: 8px;
+    }
+
+    .ps-bkactions .ps-btn {
+        font-size: 0.78125rem;
+        padding: 7px 9px;
+    }
+}

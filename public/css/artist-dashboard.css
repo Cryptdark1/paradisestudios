@@ -1,0 +1,156 @@
+/* ==========================================================================
+   PARADISE STUDIOS — ARTIST DASHBOARD
+   ========================================================================== */
+
+.ps-quickgrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(215px, 1fr));
+    gap: 10px;
+}
+
+.ps-quickgrid .ps-quick {
+    height: 100%;
+}
+
+/* --------------------------------------------------------------------------
+   1. BUZZ RING
+   The ring is drawn inline via SVG so the stroke can be animated with a
+   dash offset. Filled by artist-dashboard.js from GET /api/buzz.php.
+   -------------------------------------------------------------------------- */
+
+.ps-buzz__ring svg {
+    display: block;
+}
+
+/* When JS is unavailable the ring still shows the XP total in its centre. */
+.ps-buzz__ring--static {
+    background: var(--ps-surface-3);
+    border-radius: 50%;
+}
+
+/* --------------------------------------------------------------------------
+   2. UPCOMING SESSION PANEL
+   -------------------------------------------------------------------------- */
+
+.ps-upcoming {
+    display: flex;
+    flex-direction: column;
+}
+
+.ps-upcoming__item {
+    padding: 15px 16px;
+}
+
+.ps-upcoming__studio {
+    display: block;
+    font-family: var(--ps-font-display);
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--ps-text-strong);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.ps-upcoming__when {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 4px;
+    font-size: 0.8125rem;
+    color: var(--ps-text-muted);
+}
+
+.ps-upcoming__when .ps-icon {
+    flex: none;
+    color: var(--ps-text-soft);
+}
+
+.ps-upcoming__foot {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 13px;
+    padding-top: 12px;
+    border-top: 1px solid var(--ps-border-subtle);
+}
+
+.ps-upcoming__price {
+    flex: 1;
+    min-width: 0;
+    font-family: var(--ps-font-display);
+    font-size: 1.0625rem;
+    font-weight: 700;
+    color: var(--ps-text-strong);
+    font-variant-numeric: tabular-nums;
+}
+
+.ps-upcoming__actions {
+    display: flex;
+    gap: 7px;
+    flex: none;
+}
+
+/* Compact countdown pill above the session */
+.ps-upcoming__countdown {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    margin-top: 9px;
+    padding: 3px 9px;
+    border-radius: 99px;
+    background: var(--ps-primary-soft);
+    color: var(--ps-amber-text);
+    font-size: 0.6875rem;
+    font-weight: 600;
+}
+
+/* --------------------------------------------------------------------------
+   3. TRACK PREVIEW
+   The dashboard shows at most 3 tracks; the waveform is decorative.
+   -------------------------------------------------------------------------- */
+
+.ps-tracks-preview {
+    display: flex;
+    flex-direction: column;
+}
+
+/* --------------------------------------------------------------------------
+   4. RESPONSIVE
+   -------------------------------------------------------------------------- */
+
+/* <= 767px — phone */
+@media (max-width: 767px) {
+    .ps-quickgrid {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 8px;
+    }
+
+    .ps-upcoming__item {
+        padding: 13px 14px;
+    }
+
+    .ps-upcoming__foot {
+        gap: 8px;
+    }
+
+    .ps-upcoming__actions {
+        width: 100%;
+    }
+
+    .ps-upcoming__actions .ps-btn {
+        flex: 1;
+    }
+}
+
+/* <= 359px — 320px baseline */
+@media (max-width: 359px) {
+    .ps-quickgrid .ps-quick {
+        padding: 11px 12px;
+    }
+
+    .ps-upcoming__price {
+        font-size: 1rem;
+    }
+}

@@ -1,0 +1,150 @@
+/* ==========================================================================
+   PARADISE STUDIOS — DISCOVER STUDIOS
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. FILTER BAR
+   -------------------------------------------------------------------------- */
+
+.ps-filters__equip-btn {
+    min-width: 150px;
+    justify-content: space-between;
+}
+
+.ps-filters__equip-count {
+    display: inline-grid;
+    place-items: center;
+    min-width: 19px;
+    height: 19px;
+    padding: 0 5px;
+    border-radius: 99px;
+    background: var(--ps-amber);
+    color: var(--ps-primary-contrast);
+    font-size: 0.6875rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+}
+
+/* --------------------------------------------------------------------------
+   2. MARKETPLACE GRID
+   -------------------------------------------------------------------------- */
+
+.ps-mplace[data-empty="true"] {
+    display: block;
+}
+
+/* --------------------------------------------------------------------------
+   3. MEDIA PLACEHOLDER NOTE
+   The studio has no photo in the database. The media block is a neutral,
+   deterministic gradient derived from the studio id — it is intentionally not
+   styled or labelled as a photograph of the room.
+   -------------------------------------------------------------------------- */
+
+.ps-mcard__media .ps-icon {
+    opacity: 0.55;
+}
+
+/* --------------------------------------------------------------------------
+   4. NO-RESULTS
+   -------------------------------------------------------------------------- */
+
+.ps-noresults {
+    grid-column: 1 / -1;
+    padding: 12px 0;
+}
+
+/* --------------------------------------------------------------------------
+   5. RESPONSIVE
+   -------------------------------------------------------------------------- */
+
+/* <= 1023px */
+@media (max-width: 1023px) {
+    .ps-filters__equip-btn {
+        min-width: 0;
+        width: 100%;
+    }
+}
+
+/* <= 767px — phone */
+@media (max-width: 767px) {
+    .ps-filters {
+        gap: 10px;
+    }
+
+    .ps-filters__search {
+        flex: 1 1 100%;
+    }
+
+    /* Each filter control takes a full row for comfortable tapping. */
+    .ps-filters__field {
+        flex: 1 1 100%;
+    }
+
+    .ps-filters__field .ps-btn {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .ps-equip-pop {
+        flex: 1 1 100%;
+    }
+
+    /* On a phone the popover becomes a full-width panel under its button. */
+    .ps-equip-pop__menu {
+        left: 0;
+        right: 0;
+        width: 100%;
+    }
+
+    .ps-mcard__media {
+        height: 118px;
+    }
+
+    .ps-mcard__body {
+        padding: 13px;
+    }
+
+    .ps-mcard__foot {
+        gap: 8px;
+    }
+}
+
+/* <= 479px */
+@media (max-width: 479px) {
+    .ps-mcard__media {
+        height: 104px;
+    }
+
+    .ps-mcard__name {
+        font-size: 0.875rem;
+    }
+
+    .ps-mcard__price {
+        font-size: 0.9375rem;
+    }
+
+    /* Price above the button so neither is squeezed. */
+    .ps-mcard__foot {
+        flex-wrap: wrap;
+    }
+
+    .ps-mcard__foot .ps-btn {
+        flex: 1 1 100%;
+        justify-content: center;
+    }
+}
+
+/* <= 359px — 320px baseline */
+@media (max-width: 359px) {
+    .ps-mcard__media {
+        height: 94px;
+    }
+
+    .ps-mcard__desc {
+        font-size: 0.78125rem;
+    }
+
+    .ps-filters__equip-btn {
+        font-size: 0.8125rem;
+    }
+}

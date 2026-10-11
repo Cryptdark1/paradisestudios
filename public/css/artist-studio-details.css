@@ -1,0 +1,200 @@
+/* ==========================================================================
+   PARADISE STUDIOS — STUDIO DETAILS & BOOKING
+   ========================================================================== */
+
+.ps-req {
+    color: var(--ps-danger);
+    font-weight: 700;
+}
+
+.ps-field.has-error .ps-field__label {
+    color: var(--ps-danger);
+}
+
+/* --------------------------------------------------------------------------
+   1. LAYOUT
+   Studio information on the left, the booking form on the right. Collapses to a
+   single column on tablet and below.
+   -------------------------------------------------------------------------- */
+
+.ps-detail-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.35fr) minmax(330px, 1fr);
+    gap: 16px;
+    align-items: start;
+}
+
+/* --------------------------------------------------------------------------
+   2. MEDIA PLACEHOLDER
+   No studio photo exists in the schema, so this is a neutral gradient block
+   with an icon. It is decorative and not presented as a photograph.
+   -------------------------------------------------------------------------- */
+
+.ps-detail__media {
+    display: grid;
+    place-items: center;
+    height: 190px;
+    background:
+        radial-gradient(120% 140% at 85% 5%, var(--ps-primary-soft) 0%, transparent 55%),
+        linear-gradient(140deg, var(--ps-indigo) 0%, var(--ps-indigo-deep) 100%);
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.ps-detail__media .ps-icon {
+    opacity: 0.55;
+}
+
+/* --------------------------------------------------------------------------
+   3. STUDIO INFORMATION
+   -------------------------------------------------------------------------- */
+
+.ps-detail__name {
+    font-size: 1.375rem;
+    font-weight: 600;
+    color: var(--ps-text-strong);
+    overflow-wrap: anywhere;
+}
+
+.ps-detail__where {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 5px;
+    font-size: 0.875rem;
+    color: var(--ps-text-muted);
+}
+
+.ps-detail__where .ps-icon {
+    flex: none;
+    color: var(--ps-text-soft);
+}
+
+.ps-detail__desc {
+    margin: 13px 0 4px;
+    font-size: 0.9375rem;
+    line-height: 1.6;
+    color: var(--ps-text-muted);
+}
+
+.ps-detail__desc:empty {
+    display: none;
+}
+
+.ps-detail__subtitle {
+    margin: 18px 0 9px;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ps-text-soft);
+}
+
+/* --------------------------------------------------------------------------
+   4. BOOKING FORM
+   -------------------------------------------------------------------------- */
+
+.ps-booking-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.ps-booking-note {
+    display: flex;
+    align-items: flex-start;
+    gap: 7px;
+    font-size: 0.75rem;
+    line-height: 1.5;
+    color: var(--ps-text-soft);
+}
+
+.ps-booking-note .ps-icon {
+    flex: none;
+    margin-top: 1px;
+}
+
+.ps-booking-form .ps-btn--block {
+    min-height: 46px;
+}
+
+/* --------------------------------------------------------------------------
+   5. SUCCESS DIALOG
+   -------------------------------------------------------------------------- */
+
+.ps-success {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 9px;
+    padding: 6px 0 14px;
+}
+
+.ps-success__icon {
+    display: grid;
+    place-items: center;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: var(--ps-success-bg);
+    color: var(--ps-success);
+}
+
+.ps-success__title {
+    font-family: var(--ps-font-display);
+    font-size: 1.0625rem;
+    font-weight: 600;
+    color: var(--ps-text-strong);
+}
+
+/* --------------------------------------------------------------------------
+   6. RESPONSIVE
+   -------------------------------------------------------------------------- */
+
+/* <= 1023px — single column */
+@media (max-width: 1023px) {
+    .ps-detail-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+
+/* <= 767px — phone */
+@media (max-width: 767px) {
+    .ps-detail__media {
+        height: 148px;
+    }
+
+    .ps-detail__name {
+        font-size: 1.1875rem;
+    }
+
+    .ps-detail__desc {
+        font-size: 0.875rem;
+    }
+}
+
+/* <= 479px */
+@media (max-width: 479px) {
+    .ps-detail__media {
+        height: 124px;
+    }
+
+    .ps-detail__name {
+        font-size: 1.0625rem;
+    }
+
+    .ps-booking-form {
+        gap: 13px;
+    }
+}
+
+/* <= 359px — 320px baseline */
+@media (max-width: 359px) {
+    .ps-detail__media {
+        height: 108px;
+    }
+
+    .ps-detail__name {
+        font-size: 1rem;
+    }
+}

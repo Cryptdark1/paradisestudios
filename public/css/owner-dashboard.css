@@ -1,0 +1,230 @@
+/* ==========================================================================
+   PARADISE STUDIOS — OWNER DASHBOARD
+   Page-specific styles only; all shared components live in app.css.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. CHART LEGEND
+   -------------------------------------------------------------------------- */
+
+.ps-chart-legend {
+    gap: 16px;
+    margin-bottom: 10px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--ps-text-muted);
+}
+
+.ps-chart-legend__item {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.ps-chart-legend__swatch {
+    width: 10px;
+    height: 10px;
+    border-radius: 3px;
+    flex: none;
+}
+
+.ps-chart-legend__swatch--amber {
+    background: var(--ps-amber);
+}
+
+.ps-chart-legend__swatch--indigo {
+    background: var(--ps-indigo-soft);
+}
+
+/* --------------------------------------------------------------------------
+   2. UPCOMING SESSIONS
+   -------------------------------------------------------------------------- */
+
+.ps-sessions {
+    display: flex;
+    flex-direction: column;
+}
+
+.ps-sessions__item {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--ps-border-subtle);
+    min-width: 0;
+    transition: background-color 0.14s ease;
+}
+
+.ps-sessions__item:last-child {
+    border-bottom: 0;
+}
+
+.ps-sessions__item:hover {
+    background: var(--ps-surface-2);
+}
+
+.ps-sessions__date {
+    flex: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 46px;
+    padding: 5px 2px;
+    border-radius: 10px;
+    background: var(--ps-primary-soft);
+    /* Amber-on-amber-wash needs the darker text variant for contrast. */
+    color: var(--ps-amber-text);
+    line-height: 1.1;
+}
+
+.ps-sessions__day {
+    font-family: var(--ps-font-display);
+    font-size: 1rem;
+    font-weight: 600;
+    font-variant-numeric: tabular-nums;
+}
+
+.ps-sessions__mon {
+    font-size: 0.625rem;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    /* No opacity reduction here: fading the inherited colour drops the
+       contrast below the 4.5:1 threshold for this small text. */
+}
+
+.ps-sessions__main {
+    flex: 1;
+    min-width: 0;
+}
+
+.ps-sessions__artist {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--ps-text-strong);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.ps-sessions__meta {
+    display: block;
+    font-size: 0.75rem;
+    color: var(--ps-text-soft);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.ps-sessions__amount {
+    flex: none;
+    font-size: 0.8125rem;
+    font-weight: 700;
+    color: var(--ps-text-strong);
+    font-variant-numeric: tabular-nums;
+    text-align: right;
+}
+
+.ps-sessions__status {
+    display: block;
+    margin-top: 3px;
+}
+
+/* --------------------------------------------------------------------------
+   3. QUICK ACTIONS
+   -------------------------------------------------------------------------- */
+
+.ps-quickgrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(215px, 1fr));
+    gap: 10px;
+}
+
+.ps-quickgrid .ps-quick {
+    height: 100%;
+}
+
+/* --------------------------------------------------------------------------
+   4. STAT DELTA PLACEMENT
+   -------------------------------------------------------------------------- */
+
+.ps-stat__foot .ps-delta {
+    flex: none;
+}
+
+/* --------------------------------------------------------------------------
+   5. RESPONSIVE
+   -------------------------------------------------------------------------- */
+
+/* <= 1199px */
+@media (max-width: 1199px) {
+    .ps-quickgrid {
+        grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    }
+}
+
+/* <= 767px — phone */
+@media (max-width: 767px) {
+    .ps-sessions__item {
+        padding: 11px 13px;
+        gap: 10px;
+    }
+
+    .ps-sessions__date {
+        width: 42px;
+        padding: 4px 1px;
+    }
+
+    .ps-sessions__day {
+        font-size: 0.9375rem;
+    }
+
+    .ps-chart-legend {
+        gap: 12px;
+        font-size: 0.6875rem;
+    }
+
+    .ps-quickgrid {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 8px;
+    }
+
+    .ps-quick {
+        padding: 11px 12px;
+    }
+}
+
+/* <= 479px */
+@media (max-width: 479px) {
+    .ps-sessions__amount {
+        font-size: 0.75rem;
+    }
+
+    .ps-sessions__status .ps-badge {
+        font-size: 0.6875rem;
+        padding: 2px 7px 2px 6px;
+    }
+}
+
+/* <= 359px — 320px baseline */
+@media (max-width: 359px) {
+    .ps-sessions__item {
+        padding: 10px;
+    }
+
+    .ps-sessions__date {
+        width: 38px;
+    }
+
+    .ps-sessions__meta {
+        font-size: 0.6875rem;
+    }
+
+    .ps-chart-legend {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
+    }
+}

@@ -1,0 +1,397 @@
+/* ==========================================================================
+   PARADISE STUDIOS — OWNER BOOKINGS
+   List table (responsive cards on phones), calendar shell and detail dialog.
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. TOOLBAR CONTROLS
+   -------------------------------------------------------------------------- */
+
+.ps-calnav {
+    gap: 6px;
+}
+
+.ps-calnav .ps-iconbtn {
+    width: 34px;
+    height: 34px;
+}
+
+/* --------------------------------------------------------------------------
+   2. LIST TABLE
+   -------------------------------------------------------------------------- */
+
+.ps-table--bookings .num {
+    font-weight: 600;
+    color: var(--ps-text-strong);
+}
+
+.ps-table--bookings .date-cell {
+    white-space: nowrap;
+}
+
+/*
+ * Secondary lines (location under studio, friendly date under the date) must
+ * sit on their own row. On phones the cell becomes a flex row, so an inline
+ * <small> would otherwise run into the value.
+ */
+.ps-table--bookings td small {
+    display: block;
+    font-size: 0.6875rem;
+    color: var(--ps-text-soft);
+}
+
+/* --------------------------------------------------------------------------
+   3. BOOKING DETAIL
+   -------------------------------------------------------------------------- */
+
+.ps-detail {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.ps-detail__artist {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 13px 14px;
+    border: 1px solid var(--ps-border);
+    border-radius: 13px;
+    background: var(--ps-surface-2);
+}
+
+.ps-detail__artist-text {
+    min-width: 0;
+}
+
+.ps-detail__artist-name {
+    display: block;
+    font-family: var(--ps-font-display);
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--ps-text-strong);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.ps-detail__artist-mail {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-top: 2px;
+    font-size: 0.75rem;
+    color: var(--ps-text-muted);
+    overflow-wrap: anywhere;
+}
+
+.ps-detail__artist-mail .ps-icon {
+    flex: none;
+}
+
+.ps-detail__when {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 13px 14px;
+    border: 1px solid var(--ps-border);
+    border-radius: 13px;
+    background: var(--ps-primary-soft);
+}
+
+.ps-detail__when-icon {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    background: var(--ps-amber);
+    color: var(--ps-primary-contrast);
+}
+
+.ps-detail__when-text {
+    min-width: 0;
+}
+
+.ps-detail__when-text strong {
+    display: block;
+    font-family: var(--ps-font-display);
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: var(--ps-text-strong);
+}
+
+.ps-detail__when-text small {
+    display: block;
+    margin-top: 1px;
+    font-size: 0.75rem;
+    color: var(--ps-text-muted);
+}
+
+.ps-detail__amount {
+    margin-left: auto;
+    text-align: right;
+}
+
+.ps-detail__amount strong {
+    display: block;
+    font-family: var(--ps-font-display);
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: var(--ps-text-strong);
+    font-variant-numeric: tabular-nums;
+}
+
+.ps-detail__amount small {
+    display: block;
+    margin-top: 3px;
+}
+
+/* --------------------------------------------------------------------------
+   4. CALENDAR
+   -------------------------------------------------------------------------- */
+
+/*
+ * Event colours are driven by the booking status so the calendar matches the
+   status badges. Each status keeps a left border + coloured text, so the
+ * meaning is carried by the label as well as the colour.
+ */
+.ps-calendar .fc-event.ps-ev {
+    border-left-width: 3px;
+    background: var(--ps-surface-3);
+    color: var(--ps-text-strong);
+}
+
+.ps-calendar .ps-ev--pending { border-left-color: var(--ps-warning); }
+.ps-calendar .ps-ev--pending .fc-event-title { color: var(--ps-warning); }
+.ps-calendar .ps-ev--confirmed { border-left-color: var(--ps-info); }
+.ps-calendar .ps-ev--confirmed .fc-event-title { color: var(--ps-info); }
+.ps-calendar .ps-ev--escrow_held { border-left-color: var(--ps-violet); }
+.ps-calendar .ps-ev--escrow_held .fc-event-title { color: var(--ps-violet); }
+.ps-calendar .ps-ev--in_session { border-left-color: var(--ps-teal); }
+.ps-calendar .ps-ev--in_session .fc-event-title { color: var(--ps-teal); }
+.ps-calendar .ps-ev--completed { border-left-color: var(--ps-success); }
+.ps-calendar .ps-ev--completed .fc-event-title { color: var(--ps-success); }
+.ps-calendar .ps-ev--cancelled {
+    border-left-color: var(--ps-text-soft);
+    opacity: 0.75;
+}
+.ps-calendar .ps-ev--cancelled .ps-evc__title {
+    text-decoration: line-through;
+}
+.ps-calendar .ps-ev--cancelled .fc-event-title { color: var(--ps-text-muted); }
+.ps-calendar .ps-ev--disputed { border-left-color: var(--ps-danger); }
+.ps-calendar .ps-ev--disputed .fc-event-title { color: var(--ps-danger); }
+
+/* Two-line event chip: time on top, artist + studio underneath. */
+.ps-evc {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    line-height: 1.35;
+    overflow: hidden;
+}
+
+.ps-evc__time {
+    font-size: 0.625rem;
+    font-weight: 600;
+    opacity: 0.85;
+}
+
+.ps-evc__title {
+    font-size: 0.6875rem;
+    font-weight: 600;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.ps-calendar .fc-event:focus-visible {
+    outline: 2px solid var(--ps-focus-ring);
+    outline-offset: 1px;
+}
+
+.ps-calendar .fc-list-event.ps-ev {
+    border-left: 3px solid var(--ps-text-soft);
+}
+
+.ps-calendar .fc-list-event.ps-ev.ps-ev--pending { border-left-color: var(--ps-warning); }
+.ps-calendar .fc-list-event.ps-ev.ps-ev--confirmed { border-left-color: var(--ps-info); }
+.ps-calendar .fc-list-event.ps-ev.ps-ev--escrow_held { border-left-color: var(--ps-violet); }
+.ps-calendar .fc-list-event.ps-ev.ps-ev--in_session { border-left-color: var(--ps-teal); }
+.ps-calendar .fc-list-event.ps-ev.ps-ev--completed { border-left-color: var(--ps-success); }
+.ps-calendar .fc-list-event.ps-ev.ps-ev--cancelled { border-left-color: var(--ps-text-soft); }
+.ps-calendar .fc-list-event.ps-ev.ps-ev--disputed { border-left-color: var(--ps-danger); }
+
+.ps-calendar .fc-list-event-graphic {
+    display: none;
+}
+
+/* --------------------------------------------------------------------------
+   5. RESPONSIVE
+   -------------------------------------------------------------------------- */
+
+/* <= 900px — the table becomes a stack of cards.
+   Each cell keeps its meaning through the data-label shown above it. */
+@media (max-width: 900px) {
+    .ps-table--bookings,
+    .ps-table--bookings tbody,
+    .ps-table--bookings tr,
+    .ps-table--bookings td {
+        display: block;
+        width: 100%;
+    }
+
+    /*
+     * The shared .ps-table carries a min-width so wide tables stay readable.
+     * In card mode the table must be allowed to shrink to the card, otherwise
+     * each row's value sits off the visible edge.
+     */
+    .ps-table--bookings {
+        min-width: 0;
+    }
+
+    .ps-table--bookings thead {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip: rect(0 0 0 0);
+        white-space: nowrap;
+    }
+
+    .ps-table--bookings tbody tr {
+        padding: 12px 14px;
+        border-bottom: 1px solid var(--ps-border-subtle);
+    }
+
+    .ps-table--bookings tbody tr:last-child {
+        border-bottom: 0;
+    }
+
+    .ps-table--bookings tbody td {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 14px;
+        padding: 5px 0;
+        border: 0;
+        text-align: right;
+    }
+
+    .ps-table--bookings tbody td::before {
+        content: attr(data-label);
+        flex: none;
+        font-size: 0.6875rem;
+        font-weight: 600;
+        letter-spacing: 0.07em;
+        text-transform: uppercase;
+        color: var(--ps-text-soft);
+        text-align: left;
+    }
+
+    /* Artist cell becomes the card header */
+    .ps-table--bookings tbody td[data-label="Artist"] {
+        padding-bottom: 8px;
+        margin-bottom: 4px;
+        border-bottom: 1px solid var(--ps-border-subtle);
+    }
+
+    .ps-table--bookings tbody td[data-label="Artist"]::before {
+        display: none;
+    }
+
+    .ps-table--bookings .ps-table__primary {
+        justify-content: flex-end;
+        text-align: right;
+    }
+
+    .ps-table--bookings .actions {
+        padding-top: 10px;
+    }
+
+    .ps-table--bookings .actions::before {
+        display: none;
+    }
+}
+
+/* <= 767px — phone */
+@media (max-width: 767px) {
+    .ps-calnav {
+        width: 100%;
+    }
+
+    .ps-calnav .ps-select--inline {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .ps-card__head[data-cal-head] {
+        align-items: center;
+    }
+
+    .ps-detail__when {
+        flex-wrap: wrap;
+    }
+
+    .ps-detail__amount {
+        margin-left: 0;
+        width: 100%;
+        text-align: left;
+        padding-top: 9px;
+        border-top: 1px solid var(--ps-border);
+    }
+
+    /* Tighten the month grid so the cells stay tappable */
+    .ps-calendar .fc-daygrid-day-number {
+        padding: 4px 5px;
+        font-size: 0.75rem;
+    }
+
+    .ps-calendar .fc-daygrid-event {
+        margin: 1px 2px;
+        padding: 1px 4px;
+        font-size: 0.625rem;
+    }
+
+    .ps-calendar .fc-col-header-cell-cushion {
+        padding: 7px 2px;
+        font-size: 0.625rem;
+    }
+}
+
+/* <= 479px */
+@media (max-width: 479px) {
+    .ps-table--bookings tbody tr {
+        padding: 11px 12px;
+    }
+
+    .ps-table--bookings tbody td {
+        font-size: 0.8125rem;
+    }
+
+    .ps-detail__artist {
+        padding: 11px 12px;
+    }
+}
+
+/* <= 359px — 320px baseline */
+@media (max-width: 359px) {
+    .ps-segment {
+        width: 100%;
+    }
+
+    .ps-segment__btn {
+        flex: 1;
+        justify-content: center;
+    }
+
+    .ps-table--bookings tbody td {
+        gap: 8px;
+    }
+
+    .ps-table--bookings .ps-table__primary small {
+        max-width: 150px;
+    }
+}

@@ -1,0 +1,259 @@
+/* ==========================================================================
+   PARADISE STUDIOS — MY TRACKS
+   ========================================================================== */
+
+.ps-req {
+    color: var(--ps-danger);
+    font-weight: 700;
+}
+
+.ps-field.has-error .ps-field__label {
+    color: var(--ps-danger);
+}
+
+/* --------------------------------------------------------------------------
+   1. TRACK LIST
+   -------------------------------------------------------------------------- */
+
+.ps-tracks {
+    display: flex;
+    flex-direction: column;
+}
+
+.ps-tracks-foot {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    flex-wrap: wrap;
+    border-radius: 0 0 16px 16px;
+}
+
+/* --------------------------------------------------------------------------
+   2. UPLOAD PROGRESS
+   Shown only while a real request is in flight.
+   -------------------------------------------------------------------------- */
+
+.ps-upload-progress {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-top: 9px;
+}
+
+.ps-upload-progress .ps-progress {
+    width: 100%;
+}
+
+/* --------------------------------------------------------------------------
+   3. UPLOAD NOTICE
+   -------------------------------------------------------------------------- */
+
+/* The empty-state steps are block-level, so centre them. */
+.ps-state__icon,
+.ps-state__title,
+.ps-state__msg,
+.ps-state .ps-btn {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.ps-notice {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 13px 14px;
+    border: 1px solid var(--ps-info-border);
+    border-radius: 13px;
+    background: var(--ps-info-bg);
+}
+
+.ps-notice__icon {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: var(--ps-surface);
+    color: var(--ps-info);
+}
+
+.ps-notice__text {
+    min-width: 0;
+}
+
+.ps-notice__text strong {
+    display: block;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--ps-text-strong);
+}
+
+.ps-notice__text p {
+    margin-top: 3px;
+    font-size: 0.75rem;
+    line-height: 1.5;
+    color: var(--ps-text-muted);
+}
+
+/* --------------------------------------------------------------------------
+   4. RELEASE SUMMARY
+   Shown after a successful release so the awarded XP is unambiguous.
+   -------------------------------------------------------------------------- */
+
+.ps-xp-earned {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+    padding: 14px 15px;
+    border: 1px solid var(--ps-primary-soft);
+    border-radius: 14px;
+    background: var(--ps-primary-soft);
+}
+
+.ps-xp-earned__icon {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    background: var(--ps-amber);
+    color: var(--ps-primary-contrast);
+}
+
+.ps-xp-earned__value {
+    font-family: var(--ps-font-display);
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--ps-amber-text);
+    font-variant-numeric: tabular-nums;
+}
+
+.ps-xp-earned__label {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--ps-text-muted);
+}
+
+/* --------------------------------------------------------------------------
+   5. EMPTY STATE COPY
+   -------------------------------------------------------------------------- */
+
+.ps-empty-guidance {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    max-width: 44ch;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.ps-empty-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-top: 4px;
+    width: 100%;
+    max-width: 320px;
+}
+
+.ps-empty-step {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 8px 11px;
+    border: 1px solid var(--ps-border);
+    border-radius: 10px;
+    background: var(--ps-surface-2);
+    font-size: 0.75rem;
+    color: var(--ps-text-muted);
+    text-align: left;
+}
+
+.ps-empty-step__n {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--ps-primary-soft);
+    color: var(--ps-amber-text);
+    font-size: 0.625rem;
+    font-weight: 700;
+}
+
+/* --------------------------------------------------------------------------
+   6. RESPONSIVE
+   -------------------------------------------------------------------------- */
+
+/* <= 767px — phone */
+@media (max-width: 767px) {
+    .ps-track {
+        flex-wrap: wrap;
+    }
+
+    .ps-track__right {
+        flex: 1 1 100%;
+        justify-content: flex-end;
+        margin-top: 2px;
+    }
+
+    .ps-notice {
+        padding: 12px;
+        gap: 10px;
+    }
+
+    .ps-notice__icon {
+        width: 32px;
+        height: 32px;
+    }
+}
+
+/* <= 479px */
+@media (max-width: 479px) {
+    .ps-track {
+        padding: 10px 12px;
+    }
+
+    .ps-track__art {
+        width: 36px;
+        height: 36px;
+    }
+
+    /* Release button gets its own full-width row for comfortable tapping. */
+    .ps-track__right {
+        flex-wrap: wrap;
+    }
+
+    .ps-track__right .ps-btn {
+        flex: 1 1 auto;
+        justify-content: center;
+    }
+}
+
+/* <= 359px — 320px baseline */
+@media (max-width: 359px) {
+    .ps-xp-earned {
+        padding: 12px;
+        gap: 9px;
+    }
+
+    .ps-xp-earned__value {
+        font-size: 1.0625rem;
+    }
+
+    .ps-file {
+        padding: 11px 12px;
+        gap: 10px;
+    }
+
+    .ps-file__icon {
+        width: 34px;
+        height: 34px;
+    }
+}

@@ -1,0 +1,504 @@
+/* ==========================================================================
+   PARADISE STUDIOS — THEME FOUNDATION
+   --------------------------------------------------------------------------
+   Single source of truth for colour tokens, typography and base element
+   styles. Every owner page loads this file, which guarantees that light/dark
+   theming is consistent across the whole application.
+
+   Theme selection:
+     <html data-theme="light">  or  <html data-theme="dark">
+
+   Preference is persisted in localStorage under "paradise-theme".
+   ========================================================================== */
+
+/* --------------------------------------------------------------------------
+   1. DESIGN TOKENS — LIGHT MODE (default)
+   -------------------------------------------------------------------------- */
+
+:root,
+[data-theme="light"] {
+    /* Typography (approved design specifies Sora & Inter) */
+    --ps-font-display: "Sora", "Segoe UI", system-ui, -apple-system, sans-serif;
+    --ps-font-body: "Inter", "Segoe UI", system-ui, -apple-system, sans-serif;
+
+    /* Brand palette (from the approved design) */
+    --ps-amber: #d99a2b;
+    --ps-amber-soft: #eab555;
+    --ps-amber-light: #fbeac4;
+    /* Amber is too light to be readable on its own tinted background.
+       This darker variant is used for amber-coloured text/icons on amber
+       washes (date chips, quick-action icons, role pills). */
+    --ps-amber-text: #8a5a10;
+    --ps-indigo: #2b2f6b;
+    --ps-indigo-deep: #1e2150;
+    --ps-indigo-soft: #3d4294;
+
+    /* Surfaces */
+    --ps-bg: #f3f5f9;
+    --ps-bg-alt: #eceff5;
+    --ps-surface: #ffffff;
+    --ps-surface-2: #f8f9fc;
+    --ps-surface-3: #f1f3f8;
+    --ps-surface-inset: #f7f8fb;
+    --ps-overlay: rgba(20, 25, 40, 0.45);
+
+    /* Text */
+    --ps-text: #191f2e;
+    --ps-text-strong: #0d1220;
+    --ps-text-muted: #616b80;
+    /* Chosen to keep small secondary text above a 4.5:1 contrast ratio. */
+    --ps-text-soft: #6a7383;
+    --ps-text-inverse: #ffffff;
+
+    /* Borders */
+    --ps-border: #e4e7ef;
+    --ps-border-strong: #d3d8e4;
+    --ps-border-subtle: #eef0f6;
+
+    /* Sidebar */
+    --ps-sidebar-bg: #2a2e68;
+    --ps-sidebar-bg-soft: #22265a;
+    --ps-sidebar-text: #c3c7ea;
+    --ps-sidebar-text-strong: #ffffff;
+    --ps-sidebar-hover: rgba(255, 255, 255, 0.07);
+    --ps-sidebar-active: rgba(255, 255, 255, 0.12);
+    --ps-sidebar-border: rgba(255, 255, 255, 0.09);
+    --ps-sidebar-active-accent: var(--ps-amber);
+
+    /* Interactive */
+    --ps-primary: var(--ps-amber);
+    --ps-primary-hover: #c2881f;
+    --ps-primary-contrast: #241a05;
+    --ps-primary-soft: rgba(217, 154, 43, 0.12);
+    --ps-primary-soft-hover: rgba(217, 154, 43, 0.2);
+    --ps-focus-ring: rgba(217, 154, 43, 0.45);
+
+    /* Status colours */
+    --ps-success: #12784a;
+    --ps-success-bg: #e2f5eb;
+    --ps-success-border: #b6e3cb;
+    --ps-danger: #c0342b;
+    --ps-danger-bg: #fdeceb;
+    --ps-danger-border: #f7c8c4;
+    --ps-warning: #8f5806;
+    --ps-warning-bg: #fdf1da;
+    --ps-warning-border: #f4dcae;
+    --ps-info: #2357a8;
+    --ps-info-bg: #e6eefb;
+    --ps-info-border: #c2d5f3;
+    --ps-violet: #6c3bb5;
+    --ps-violet-bg: #f0e9fb;
+    --ps-violet-border: #d8c8f1;
+    --ps-teal: #0a6f74;
+    --ps-teal-bg: #dff3f4;
+    --ps-teal-border: #b3dfe2;
+
+    /* Shadows */
+    --ps-shadow-xs: 0 1px 2px rgba(19, 25, 40, 0.05);
+    --ps-shadow-sm: 0 1px 2px rgba(19, 25, 40, 0.06), 0 2px 6px rgba(19, 25, 40, 0.04);
+    --ps-shadow-md: 0 4px 14px rgba(19, 25, 40, 0.08);
+    --ps-shadow-lg: 0 12px 32px rgba(19, 25, 40, 0.12);
+    --ps-shadow-xl: 0 24px 60px rgba(19, 25, 40, 0.18);
+    --ps-shadow-sidebar: 2px 0 18px rgba(19, 25, 40, 0.06);
+
+    /* Charts */
+    --ps-chart-grid: rgba(25, 31, 46, 0.08);
+    --ps-chart-tick: #6a7383;
+    --ps-chart-bar-track: #eef1f6;
+
+    /* Calendar */
+    --ps-cal-today-bg: rgba(217, 154, 43, 0.14);
+    --ps-cal-day-bg: #ffffff;
+    --ps-cal-day-other: #f7f8fb;
+
+    color-scheme: light;
+}
+
+/* --------------------------------------------------------------------------
+   2. DESIGN TOKENS — DARK MODE
+   -------------------------------------------------------------------------- */
+
+[data-theme="dark"] {
+    --ps-amber: #eab04a;
+    --ps-amber-soft: #f0c069;
+    --ps-amber-light: #4a3712;
+    /* On dark surfaces the bright amber already reads clearly, so the text
+       variant simply reuses it. */
+    --ps-amber-text: #eab04a;
+    --ps-indigo: #1a1c3d;
+    --ps-indigo-deep: #12142e;
+    --ps-indigo-soft: #5a5fa8;
+
+    /* Surfaces */
+    --ps-bg: #0b1118;
+    --ps-bg-alt: #080d13;
+    --ps-surface: #141c26;
+    --ps-surface-2: #1a2431;
+    --ps-surface-3: #212c3a;
+    --ps-surface-inset: #101821;
+    --ps-overlay: rgba(3, 7, 12, 0.66);
+
+    /* Text */
+    --ps-text: #e7ecf4;
+    --ps-text-strong: #f7f9fc;
+    --ps-text-muted: #98a5b9;
+    /* Lightened so small secondary text clears 4.5:1 on the dark surfaces. */
+    --ps-text-soft: #8c98a9;
+    --ps-text-inverse: #0b1118;
+
+    /* Borders */
+    --ps-border: #25303e;
+    --ps-border-strong: #33404f;
+    --ps-border-subtle: #1c2632;
+
+    /* Sidebar */
+    --ps-sidebar-bg: #0f1621;
+    --ps-sidebar-bg-soft: #131c28;
+    --ps-sidebar-text: #8d9ab0;
+    --ps-sidebar-text-strong: #ffffff;
+    --ps-sidebar-hover: rgba(255, 255, 255, 0.055);
+    --ps-sidebar-active: rgba(234, 176, 74, 0.12);
+    --ps-sidebar-border: rgba(255, 255, 255, 0.07);
+    --ps-sidebar-active-accent: var(--ps-amber);
+
+    /* Interactive */
+    --ps-primary: var(--ps-amber);
+    --ps-primary-hover: var(--ps-amber-soft);
+    --ps-primary-contrast: #1a1204;
+    --ps-primary-soft: rgba(234, 176, 74, 0.14);
+    --ps-primary-soft-hover: rgba(234, 176, 74, 0.24);
+    --ps-focus-ring: rgba(234, 176, 74, 0.55);
+
+    /* Status colours — lightened for contrast on dark surfaces */
+    --ps-success: #56d69b;
+    --ps-success-bg: rgba(86, 214, 155, 0.14);
+    --ps-success-border: rgba(86, 214, 155, 0.32);
+    --ps-danger: #ff8a80;
+    --ps-danger-bg: rgba(255, 138, 128, 0.14);
+    --ps-danger-border: rgba(255, 138, 128, 0.32);
+    --ps-warning: #f5c164;
+    --ps-warning-bg: rgba(245, 193, 100, 0.14);
+    --ps-warning-border: rgba(245, 193, 100, 0.32);
+    --ps-info: #82b1f5;
+    --ps-info-bg: rgba(130, 177, 245, 0.14);
+    --ps-info-border: rgba(130, 177, 245, 0.32);
+    --ps-violet: #b795f0;
+    --ps-violet-bg: rgba(183, 149, 240, 0.15);
+    --ps-violet-border: rgba(183, 149, 240, 0.34);
+    --ps-teal: #63cdd3;
+    --ps-teal-bg: rgba(99, 205, 211, 0.14);
+    --ps-teal-border: rgba(99, 205, 211, 0.32);
+
+    /* Shadows */
+    --ps-shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.4);
+    --ps-shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.45), 0 2px 6px rgba(0, 0, 0, 0.3);
+    --ps-shadow-md: 0 4px 16px rgba(0, 0, 0, 0.45);
+    --ps-shadow-lg: 0 14px 36px rgba(0, 0, 0, 0.55);
+    --ps-shadow-xl: 0 24px 60px rgba(0, 0, 0, 0.65);
+    --ps-shadow-sidebar: 2px 0 18px rgba(0, 0, 0, 0.4);
+
+    /* Charts */
+    --ps-chart-grid: rgba(231, 236, 244, 0.08);
+    --ps-chart-tick: #8c98a9;
+    --ps-chart-bar-track: rgba(255, 255, 255, 0.05);
+
+    /* Calendar */
+    --ps-cal-today-bg: rgba(234, 176, 74, 0.16);
+    --ps-cal-day-bg: #141c26;
+    --ps-cal-day-other: #101821;
+
+    color-scheme: dark;
+}
+
+/* --------------------------------------------------------------------------
+   3. RESET & BASE ELEMENTS
+   -------------------------------------------------------------------------- */
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+html {
+    -webkit-text-size-adjust: 100%;
+    scroll-behavior: smooth;
+}
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    min-height: 100dvh;
+    background-color: var(--ps-bg);
+    color: var(--ps-text);
+    font-family: var(--ps-font-body);
+    font-size: 15px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+    overflow-x: hidden;
+}
+
+/* Prevent layout shift when a vertical scrollbar appears/disappears. */
+html {
+    scrollbar-gutter: stable;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    margin: 0;
+    font-family: var(--ps-font-display);
+    font-weight: 600;
+    line-height: 1.25;
+    letter-spacing: -0.015em;
+    color: var(--ps-text-strong);
+}
+
+h1 {
+    font-size: 1.5rem;
+}
+h2 {
+    font-size: 1.175rem;
+}
+h3 {
+    font-size: 1rem;
+}
+
+p {
+    margin: 0;
+}
+
+img,
+svg,
+canvas {
+    max-width: 100%;
+    display: block;
+}
+
+ul,
+ol {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+a {
+    color: var(--ps-primary);
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+button,
+input,
+select,
+textarea {
+    font: inherit;
+    color: inherit;
+}
+
+button {
+    cursor: pointer;
+}
+
+fieldset {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    min-width: 0;
+}
+
+legend {
+    padding: 0;
+}
+
+hr {
+    border: 0;
+    border-top: 1px solid var(--ps-border);
+    margin: 0;
+}
+
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+    width: 100%;
+}
+
+code,
+kbd,
+samp {
+    font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    font-size: 0.9em;
+}
+
+/* --------------------------------------------------------------------------
+   4. TYPOGRAPHY HELPERS
+   -------------------------------------------------------------------------- */
+
+.ps-display {
+    font-family: var(--ps-font-display);
+}
+
+.ps-eyebrow {
+    font-size: 0.6875rem;
+    font-weight: 600;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--ps-text-soft);
+}
+
+.ps-muted {
+    color: var(--ps-text-muted);
+}
+
+.ps-soft {
+    color: var(--ps-text-soft);
+}
+
+.ps-small {
+    font-size: 0.8125rem;
+}
+
+.ps-tiny {
+    font-size: 0.75rem;
+}
+
+.ps-strong {
+    color: var(--ps-text-strong);
+    font-weight: 600;
+}
+
+.ps-truncate {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    min-width: 0;
+}
+
+.ps-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.ps-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.ps-num {
+    font-variant-numeric: tabular-nums;
+    font-feature-settings: "tnum" 1;
+}
+
+/* --------------------------------------------------------------------------
+   5. ACCESSIBILITY — FOCUS & REDUCED MOTION
+   -------------------------------------------------------------------------- */
+
+:focus {
+    outline: none;
+}
+
+:focus-visible {
+    outline: 2px solid var(--ps-focus-ring);
+    outline-offset: 2px;
+    border-radius: 4px;
+}
+
+.ps-sr-only {
+    position: absolute !important;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+.ps-skip-link {
+    position: absolute;
+    top: -100px;
+    left: 12px;
+    z-index: 2000;
+    padding: 10px 16px;
+    border-radius: 0 0 8px 8px;
+    background: var(--ps-amber);
+    color: var(--ps-primary-contrast);
+    font-weight: 600;
+    transition: top 0.18s ease;
+}
+
+.ps-skip-link:focus {
+    top: 0;
+    text-decoration: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+/* --------------------------------------------------------------------------
+   6. SCROLLBARS
+   -------------------------------------------------------------------------- */
+
+* {
+    scrollbar-width: thin;
+    scrollbar-color: var(--ps-border-strong) transparent;
+}
+
+*::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+*::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+    background-color: var(--ps-border-strong);
+    border-radius: 99px;
+    border: 3px solid transparent;
+    background-clip: content-box;
+}
+
+*::-webkit-scrollbar-thumb:hover {
+    background-color: var(--ps-text-soft);
+}
+
+/* --------------------------------------------------------------------------
+   7. THEME TRANSITION GUARD
+   Applied briefly while the user toggles the theme so colour changes are
+   smooth, then removed so it never interferes with page navigation.
+   -------------------------------------------------------------------------- */
+
+[data-theme-transition] *,
+[data-theme-transition] *::before,
+[data-theme-transition] *::after {
+    transition:
+        background-color 0.2s ease,
+        border-color 0.2s ease,
+        color 0.2s ease,
+        fill 0.2s ease !important;
+}

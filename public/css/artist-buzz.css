@@ -1,0 +1,201 @@
+/* ==========================================================================
+   PARADISE STUDIOS — BUZZ XP & REVIEWS
+   ========================================================================== */
+
+.ps-req {
+    color: var(--ps-danger);
+    font-weight: 700;
+}
+
+/* --------------------------------------------------------------------------
+   1. PROGRESS BAR (linear, used under the donut)
+   -------------------------------------------------------------------------- */
+
+.ps-progress {
+    height: 8px;
+    border-radius: 99px;
+    background: var(--ps-chart-bar-track);
+    overflow: hidden;
+}
+
+.ps-progress__bar {
+    height: 100%;
+    width: 0;
+    border-radius: 99px;
+    background: var(--ps-amber);
+    transition: width 0.5s ease;
+}
+
+/* --------------------------------------------------------------------------
+   2. REVIEWABLE BOOKING ROW
+   -------------------------------------------------------------------------- */
+
+.ps-reviewable {
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+}
+
+.ps-reviewrow {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    padding: 13px 14px;
+    border: 1px solid var(--ps-border);
+    border-radius: 13px;
+    background: var(--ps-surface-2);
+}
+
+.ps-reviewrow__text {
+    flex: 1;
+    min-width: 0;
+}
+
+.ps-reviewrow__studio {
+    display: block;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--ps-text-strong);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.ps-reviewrow__when {
+    display: block;
+    margin-top: 2px;
+    font-size: 0.75rem;
+    color: var(--ps-text-muted);
+}
+
+.ps-reviewrow__action {
+    flex: none;
+}
+
+/* --------------------------------------------------------------------------
+   3. STAR DISPLAY (read-only)
+   --------------------------------------------------------------------------
+   The filled/unfilled star distinction carries a text label alongside it in the
+   review header, so rating is never communicated by shape or colour alone.
+   -------------------------------------------------------------------------- */
+
+.ps-stars-read {
+    display: inline-flex;
+    align-items: center;
+    gap: 1px;
+    color: var(--ps-amber);
+}
+
+.ps-stars-read .is-off {
+    color: var(--ps-border-strong);
+}
+
+/* --------------------------------------------------------------------------
+   4. REVIEW CARDS
+   -------------------------------------------------------------------------- */
+
+.ps-review {
+    display: flex;
+    gap: 12px;
+    padding: 13px 14px;
+    border: 1px solid var(--ps-border);
+    border-radius: 13px;
+    background: var(--ps-surface);
+}
+
+.ps-review + .ps-review {
+    margin-top: 10px;
+}
+
+.ps-review__body {
+    min-width: 0;
+    flex: 1;
+}
+
+.ps-review__head {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 5px;
+}
+
+.ps-review__studio {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--ps-text-strong);
+}
+
+.ps-review__rating-text {
+    font-size: 0.6875rem;
+    font-weight: 600;
+    color: var(--ps-text-muted);
+    font-variant-numeric: tabular-nums;
+}
+
+.ps-review__comment {
+    font-size: 0.8125rem;
+    line-height: 1.55;
+    color: var(--ps-text-muted);
+    overflow-wrap: anywhere;
+}
+
+.ps-review__comment--empty {
+    font-style: italic;
+    color: var(--ps-text-soft);
+}
+
+.ps-review__date {
+    margin-top: 5px;
+    font-size: 0.6875rem;
+    color: var(--ps-text-soft);
+}
+
+.ps-review__avatar {
+    flex: none;
+}
+
+/* --------------------------------------------------------------------------
+   5. RANK SUMMARY PANEL
+   -------------------------------------------------------------------------- */
+
+.ps-buzz__next b {
+    color: var(--ps-text-strong);
+    font-variant-numeric: tabular-nums;
+}
+
+/* --------------------------------------------------------------------------
+   6. RESPONSIVE
+   -------------------------------------------------------------------------- */
+
+/* <= 767px — phone */
+@media (max-width: 767px) {
+    .ps-reviewrow {
+        padding: 12px 13px;
+    }
+
+    .ps-reviewrow__action {
+        width: 100%;
+    }
+
+    .ps-reviewrow__action .ps-btn {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .ps-review {
+        padding: 12px 13px;
+    }
+}
+
+/* <= 359px — 320px baseline */
+@media (max-width: 359px) {
+    .ps-reviewrow__when {
+        font-size: 0.6875rem;
+    }
+
+    .ps-review {
+        gap: 10px;
+    }
+}

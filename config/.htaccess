@@ -1,0 +1,12 @@
+# =============================================================================
+# Paradise Studios - config directory
+# =============================================================================
+# These files are PHP includes, never content. Nothing here should be
+# reachable over HTTP: config/payments.php and config/env.php can disclose
+# key names, file paths and, if a future mistake puts a value inline, secrets.
+#
+# PHP's require_once reads them from the filesystem, so denying web access
+# does not affect the application at all.
+# =============================================================================
+
+Require all denied

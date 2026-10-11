@@ -1,0 +1,531 @@
+/* ==========================================================================
+   PARADISE STUDIOS — AUTH SCREEN
+   Sign in / register. Split layout: brand panel on the left, form on the
+   right. Built on the same tokens as the rest of the product, so the auth
+   screen follows the saved light/dark preference like every other page.
+   ========================================================================== */
+
+.ps-auth {
+    display: grid;
+    place-items: center;
+    min-height: 100vh;
+    min-height: 100dvh;
+    padding: 24px;
+    background:
+        radial-gradient(1200px 600px at 12% -10%, var(--ps-primary-soft) 0%, transparent 58%),
+        var(--ps-bg);
+}
+
+/* The single theme toggle, positioned like the in-app one. */
+.ps-auth__theme {
+    position: fixed;
+    top: 18px;
+    right: 18px;
+    z-index: 10;
+}
+
+/* --------------------------------------------------------------------------
+   1. PANEL
+   -------------------------------------------------------------------------- */
+
+.ps-auth__panel {
+    display: grid;
+    /* Measured off the prototype's split screen: the photo and the form are
+       near-even, with the form a touch wider. */
+    grid-template-columns: 1fr 1.06fr;
+    width: 100%;
+    max-width: 1040px;
+    border: 1px solid var(--ps-border);
+    border-radius: 20px;
+    background: var(--ps-surface);
+    box-shadow: var(--ps-shadow-xl);
+    overflow: hidden;
+}
+
+/* --------------------------------------------------------------------------
+   2. PHOTO SIDE
+   --------------------------------------------------------------------------
+   The prototype's split-screen auth (panel 06) is a full-bleed studio photo on
+   the left and the form on the right, inside one rounded card. The panel's own
+   `overflow: hidden` clips the photo to the card, so no radius is needed here.
+
+   The fallback colour matches the darkest tone in the photograph, so if the
+   image ever fails to load the panel reads as a dark studio rather than a white
+   gap. The photo is decorative (the wrapper is aria-hidden), which is why it is
+   a background image rather than an <img> needing alt text.
+   -------------------------------------------------------------------------- */
+
+.ps-auth__aside {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding: 30px 26px;
+    background-color: #171310;
+    background-image: url("../img/auth-studio.jpg");
+    background-size: cover;
+    background-position: 50% 38%;
+    background-repeat: no-repeat;
+    overflow: hidden;
+}
+
+/*
+ * The photograph is dark and the brand sits on top of it, so a soft scrim is
+ * needed behind the wordmark for legibility. Top-weighted, so the artist and
+ * the microphone in the shot stay clear.
+ */
+.ps-auth__aside::before {
+    content: "";
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: 46%;
+    background: linear-gradient(180deg, rgba(10, 8, 6, 0.72) 0%, rgba(10, 8, 6, 0) 100%);
+    pointer-events: none;
+}
+
+.ps-auth__aside .ps-auth__brand {
+    position: relative;
+    z-index: 1;
+    align-self: flex-start;
+    padding: 7px 12px 7px 7px;
+    border-radius: 12px;
+    background: rgba(12, 9, 7, 0.34);
+    backdrop-filter: blur(6px);
+}
+
+.ps-auth__brand {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+}
+
+.ps-auth__brand .ps-brand__name {
+    font-family: var(--ps-font-display);
+    font-size: 0.9375rem;
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: #fff;
+}
+
+.ps-auth__brand .ps-brand__name span {
+    display: block;
+}
+
+.ps-auth__brand .ps-brand__name span:last-child {
+    color: var(--ps-amber);
+}
+
+/* --------------------------------------------------------------------------
+   3. FORM SIDE
+   -------------------------------------------------------------------------- */
+
+.ps-auth__form {
+    padding: 38px 42px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 13px;
+}
+
+.ps-auth__brand--mobile {
+    display: none;
+    margin-bottom: 4px;
+}
+
+.ps-auth__title {
+    font-size: 1.75rem;
+    font-weight: 600;
+    letter-spacing: -0.015em;
+    color: var(--ps-text-strong);
+}
+
+.ps-auth__lead {
+    margin-top: -8px;
+    font-size: 0.875rem;
+    color: var(--ps-text-muted);
+}
+
+.ps-auth__form form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 4px;
+}
+
+.ps-auth__switch {
+    font-size: 0.8125rem;
+    color: var(--ps-text-muted);
+    text-align: center;
+}
+
+.ps-auth__switch a {
+    font-weight: 600;
+}
+
+.ps-auth__note {
+    display: flex;
+    align-items: flex-start;
+    gap: 7px;
+    margin-top: 4px;
+    padding-top: 13px;
+    border-top: 1px solid var(--ps-border-subtle);
+    font-size: 0.75rem;
+    line-height: 1.5;
+    color: var(--ps-text-soft);
+}
+
+.ps-auth__note .ps-icon {
+    flex: none;
+    margin-top: 1px;
+}
+
+/* --------------------------------------------------------------------------
+   4. ALERTS
+   -------------------------------------------------------------------------- */
+
+.ps-auth__alert {
+    display: flex;
+    align-items: flex-start;
+    gap: 9px;
+    padding: 11px 13px;
+    border-radius: 11px;
+    font-size: 0.8125rem;
+    font-weight: 500;
+}
+
+.ps-auth__alert .ps-icon {
+    flex: none;
+    margin-top: 1px;
+}
+
+.ps-auth__alert--error {
+    border: 1px solid var(--ps-danger-border);
+    background: var(--ps-danger-bg);
+    color: var(--ps-danger);
+}
+
+.ps-auth__alert--info {
+    border: 1px solid var(--ps-info-border);
+    background: var(--ps-info-bg);
+    color: var(--ps-info);
+}
+
+/* --------------------------------------------------------------------------
+   5. PASSWORD FIELD WITH SHOW/HIDE
+   -------------------------------------------------------------------------- */
+
+.ps-password {
+    position: relative;
+}
+
+.ps-password input {
+    padding-right: 46px;
+}
+
+.ps-password__toggle {
+    position: absolute;
+    top: 50%;
+    right: 6px;
+    transform: translateY(-50%);
+    display: grid;
+    place-items: center;
+    width: 34px;
+    height: 34px;
+    border: 0;
+    border-radius: 8px;
+    background: none;
+    color: var(--ps-text-soft);
+    cursor: pointer;
+    transition:
+        background-color 0.15s ease,
+        color 0.15s ease;
+}
+
+.ps-password__toggle:hover {
+    background: var(--ps-surface-3);
+    color: var(--ps-text-strong);
+}
+
+.ps-password__toggle:focus-visible {
+    outline: 2px solid var(--ps-focus-ring);
+    outline-offset: 1px;
+}
+
+/* --------------------------------------------------------------------------
+   6. ROLE PICKER (register only)
+   --------------------------------------------------------------------------
+   The backend only accepts 'artist' or 'owner'. Administrator is intentionally
+   not offered, so the interface cannot be used to request a privileged role.
+   -------------------------------------------------------------------------- */
+
+.ps-roles {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 9px;
+}
+
+.ps-role {
+    position: relative;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 13px;
+    border: 1px solid var(--ps-border);
+    border-radius: 12px;
+    background: var(--ps-surface);
+    cursor: pointer;
+    transition:
+        border-color 0.15s ease,
+        background-color 0.15s ease;
+}
+
+.ps-role:hover {
+    border-color: var(--ps-border-strong);
+    background: var(--ps-surface-2);
+}
+
+.ps-role input {
+    position: absolute;
+    opacity: 0;
+    width: 1px;
+    height: 1px;
+}
+
+.ps-role__box {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 20px;
+    height: 20px;
+    border: 1.8px solid var(--ps-border-strong);
+    border-radius: 50%;
+    background: var(--ps-surface);
+    transition:
+        border-color 0.15s ease,
+        box-shadow 0.15s ease;
+}
+
+.ps-role__box::after {
+    content: "";
+    width: 9px;
+    height: 9px;
+    border-radius: 50%;
+    background: var(--ps-amber);
+    transform: scale(0);
+    transition: transform 0.15s ease;
+}
+
+.ps-role input:checked ~ .ps-role__box {
+    border-color: var(--ps-amber);
+}
+
+.ps-role input:checked ~ .ps-role__box::after {
+    transform: scale(1);
+}
+
+.ps-role:has(input:checked) {
+    border-color: var(--ps-amber);
+    background: var(--ps-primary-soft);
+}
+
+.ps-role input:focus-visible ~ .ps-role__box {
+    outline: 2px solid var(--ps-focus-ring);
+    outline-offset: 2px;
+}
+
+.ps-role__icon {
+    display: grid;
+    place-items: center;
+    flex: none;
+    width: 32px;
+    height: 32px;
+    border-radius: 9px;
+    background: var(--ps-surface-3);
+    color: var(--ps-text-muted);
+}
+
+.ps-role:has(input:checked) .ps-role__icon {
+    background: var(--ps-amber);
+    color: var(--ps-primary-contrast);
+}
+
+.ps-role__text {
+    min-width: 0;
+}
+
+.ps-role__name {
+    display: block;
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--ps-text-strong);
+}
+
+.ps-role__hint {
+    display: block;
+    margin-top: 1px;
+    font-size: 0.6875rem;
+    color: var(--ps-text-soft);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/*
+ * The selected card is tinted with --ps-primary-soft, which lifts its
+ * background and leaves --ps-text-soft at 3.6:1 in dark mode - under the 4.5:1
+ * AA asks of this small text. Step up one token for the selected state.
+ */
+.ps-role:has(input:checked) .ps-role__hint {
+    color: var(--ps-text-muted);
+}
+
+/* --------------------------------------------------------------------------
+   7. PASSWORD STRENGTH
+   -------------------------------------------------------------------------- */
+
+.ps-strength {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 7px;
+}
+
+.ps-strength__bars {
+    display: flex;
+    gap: 3px;
+    flex: 1;
+}
+
+.ps-strength__bar {
+    flex: 1;
+    height: 4px;
+    border-radius: 99px;
+    background: var(--ps-chart-bar-track);
+    transition: background-color 0.2s ease;
+}
+
+.ps-strength__label {
+    flex: none;
+    font-size: 0.6875rem;
+    font-weight: 600;
+    color: var(--ps-text-soft);
+    min-width: 58px;
+    text-align: right;
+}
+
+.ps-strength.is-weak .ps-strength__bar:nth-child(-n + 1) {
+    background: var(--ps-danger);
+}
+
+.ps-strength.is-fair .ps-strength__bar:nth-child(-n + 2) {
+    background: var(--ps-warning);
+}
+
+.ps-strength.is-good .ps-strength__bar:nth-child(-n + 3) {
+    background: var(--ps-teal);
+}
+
+.ps-strength.is-strong .ps-strength__bar {
+    background: var(--ps-success);
+}
+
+.ps-strength.is-weak .ps-strength__label {
+    color: var(--ps-danger);
+}
+
+.ps-strength.is-fair .ps-strength__label {
+    color: var(--ps-warning);
+}
+
+.ps-strength.is-good .ps-strength__label {
+    color: var(--ps-teal);
+}
+
+.ps-strength.is-strong .ps-strength__label {
+    color: var(--ps-success);
+}
+
+/* --------------------------------------------------------------------------
+   8. RESPONSIVE
+   -------------------------------------------------------------------------- */
+
+/* <= 900px — the brand panel collapses above the form */
+@media (max-width: 900px) {
+    .ps-auth {
+        padding: 18px;
+    }
+
+    .ps-auth__panel {
+        grid-template-columns: minmax(0, 1fr);
+        max-width: 520px;
+    }
+
+    .ps-auth__aside {
+        display: none;
+    }
+
+    .ps-auth__brand--mobile {
+        display: flex;
+    }
+
+    .ps-auth__form {
+        padding: 28px 24px;
+    }
+}
+
+/* <= 479px */
+@media (max-width: 479px) {
+    .ps-auth {
+        padding: 12px;
+        align-items: start;
+    }
+
+    .ps-auth__panel {
+        border-radius: 16px;
+    }
+
+    .ps-auth__form {
+        padding: 22px 18px;
+        gap: 11px;
+    }
+
+    .ps-auth__title {
+        font-size: 1.3125rem;
+    }
+
+    .ps-roles {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .ps-auth__theme {
+        top: 12px;
+        right: 12px;
+    }
+}
+
+/* <= 359px — 320px baseline */
+@media (max-width: 359px) {
+    .ps-auth {
+        padding: 8px;
+    }
+
+    .ps-auth__form {
+        padding: 18px 14px;
+        gap: 10px;
+    }
+
+    .ps-auth__title {
+        font-size: 1.1875rem;
+    }
+
+    .ps-role {
+        padding: 10px 11px;
+    }
+
+    .ps-strength__label {
+        min-width: 50px;
+        font-size: 0.625rem;
+    }
+}
